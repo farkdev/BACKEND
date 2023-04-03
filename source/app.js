@@ -28,7 +28,7 @@ app.get('/products', (request, response) =>{
 app.get('/products/:pid', async (request, response) => {
     const productId = request.params.pid;
     try{ 
-        let product = products.find(p=>p.id===productId)
+        let product = products.find(p=>p.id===Number(productId))
         if(!product) {
             return response.status(404)({error: "producto no encontrado"})
         }

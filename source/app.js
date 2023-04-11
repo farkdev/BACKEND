@@ -4,10 +4,35 @@ const cookieParser = require('cookie-parser')
 const products = require('./data.json')
 const handlebars = require('express-handlebars')
 const productsRouter = require('./routes/products.router')
-const cartRouter = require('./routes/carts.router')
+const cartRouter = require('./routes/carts.router.js')
 const {uploader} = require('./utils')
 const app = express()
- 
+
+//___________________________________________________________________________
+const { Server } = require('socket.io')
+const httpServer = app.listen(8080, ()=>{
+    console.log("servidor funcionando!")
+})
+
+const socketServer = new Server(httpServer)
+
+app.get('/chat', (req, res)=>{
+    res.render('chat', {})
+})
+
+socketServer.on('connection', socket => {
+    console.log('cliente conectado')
+    socket.on('message', data =>{
+        console.log(data)
+    })
+
+    socket.emit('evento-para-socket-individual', 'mensaje 1')
+
+    socket.broadcast.emit('evt-para-todos-menos-el-actual', 'mensaje 2')
+
+    socket.emit
+})
+//___________________________________________________________________________
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname+'/views')
@@ -25,15 +50,8 @@ app.use( (request, response, next)=>{
 })
 
 
-
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartRouter)
-
-
-
-
-
-
 
 
 
@@ -44,13 +62,6 @@ app.post('/single', uploader.single('myfile'), (req, res)=>{
     })
 
 })
-
-
-
-
-
-
-
 
 
 app.get('/vista', (request, response)=>{
@@ -67,8 +78,3 @@ app.get('/vista', (request, response)=>{
 })
 
 
-
-
-app.listen(8080, ()=>{
-    console.log("servidor funcionando!")
-})

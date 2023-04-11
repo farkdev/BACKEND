@@ -4,6 +4,7 @@ const CartManager = require('../cartManager')
 const router = require('./products.router');
 const ProductM = new ProductManager()
 const CartMan = new CartManager('./cart.json')
+
 const router1 = new Router()
 
 
@@ -20,16 +21,16 @@ router1.get('/:cid', async (req, res) =>{
   !cart ? res.status(404).send({error: "Ocurrió un error al obtener el carrito"}) : res.status(200).send({status:'success', cart})
 })
 
-router.post("/:cid/product/:pid", async (req, res) => {
+router1.post("/:cid/product/:pid", async (req, res) => {
   const { cid, pid } = req.params
-  const product = await productManager.getProductById(parseInt(pid));
+  const product = await ProductM.getProductById(parseInt(pid));
   if (product) {
-    const cart = await cartManager.addToCart(parseInt(cid), parseInt(pid))
-    !cart ? res.status(404).send(notFound) : res.status(200).send(cart)
+    const cart = await CartMan.addToCart(parseInt(cid), parseInt(pid))
+    !cart ? res.status(404).send({error : "ocurrió un error al buscar el producto"}) : res.status(200).send(cart)
   } else {
     res.status(404).send({ error: "Product not found" })
   }
 });
 
 
-module.exports = router1()
+module.exports = router1

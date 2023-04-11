@@ -10,7 +10,7 @@ function mid1(request, response, next){
     response.send("no tenes permiso")
 }
 
-
+let products = []
 
 
 
@@ -23,18 +23,19 @@ router.get('/', async (request, response)=>{
 })
 
 
-router.get('/limit', async (request, response) =>{
+router.get('/', async (request, response) =>{
     const limit = request.query.limit
 
     try{
      let productsToReturn = await PManager.getProducts()
+     let products = productsToReturn
 
      if(limit&& parseInt(limit) > 0){
-        productsToReturn = products.slice(0,parseInt(limit))
+        productsToReturn = productsToReturn.slice(0,parseInt(limit))
      }
-     return response.send({products: productsToReturn})
+     return response.send({products})
     } catch (error){
-     console.error(error)
+     console.log(error)
      return response.status(500).send({error: "Ocurrió un error al obtener los productos"})
     }
 
@@ -43,7 +44,7 @@ router.get('/limit', async (request, response) =>{
 router.get('/:pid', async (request, response) => {
     const productId = request.params.pid;
     try{ 
-        let product = products.find(p=>p.id===Number(productId))
+        let product = product.find(p=>p.id===Number(productId))
         if(!product) {
             return response.status(404).send({error: "producto no encontrado"})
         }
@@ -71,8 +72,8 @@ router.post('/', (request, response)=>{
         return response.status(400).send({error: "el producto debe tener un stock disponible"})
     }
     
-    products.push(newProduct)
-    response.status(200).send({products})
+    const product = PManager.addProduct(newProduct)
+    response.status(200).send({product: product})
 
 })
 

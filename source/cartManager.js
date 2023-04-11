@@ -98,19 +98,19 @@ class CartManager {
             if(this.exists(this.path)) {
                 const carts = await this.readCart()
                 const cart = carts.find(item => item.id === cid)
-                console.log(cart);
-            if(cart) {
-                const addProduct = cart.products.find(item => item.id === pid)
-                if(addProduct) {
+                if(cart) {
+                    const addProduct = cart.products.find(item => item.id === pid)
+                    if(addProduct) {
                     addProduct.quantity++
-                }else{
+                    }else{
                     cart.products.push({id: pid, quantity: 1 })
+                    }
+                    await this.writeCart(carts)
+                    this.cart = cart
+                    return this.cart
                 }
-                await this.writeCart(carts)
-                return cart
-            }
             throw new Error(`The cart with the id was not found: ${cid}`)
-        }
+            }
         } catch (error) {
             console.log(error);
         }

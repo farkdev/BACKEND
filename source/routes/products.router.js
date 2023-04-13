@@ -113,15 +113,16 @@ router.put('/:pid', async (request, response)=>{
 })
 
 
-router.delete('/:code', (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const productCode = parseInt(req.params.code);
-        const productIndex = products.findIndex(product => product.code === productCode);
+        const productId = parseInt(req.params.id);
+        console.log(productId)
+        const product= await PManager.deleteProduct(productId);
   
-        if (productIndex === -1) {
+        if (!product) {
             return res.status(404).send({ error: 'Producto no encontrado' });
         }
-        return res.status(200).send({deletedProduct})
+        return res.status(200).send({product})
     } catch (error){
         console.error(error)
         return res.status(500).send({ error: "Ocurrió un error al eliminar el producto" })

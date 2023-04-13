@@ -9,6 +9,8 @@ const {uploader} = require('./utils')
 const app = express()
 
 //___________________________________________________________________________
+messages = []
+
 const { Server } = require('socket.io')
 const httpServer = app.listen(8080, ()=>{
     console.log("servidor funcionando!")
@@ -23,14 +25,10 @@ app.get('/chat', (req, res)=>{
 socketServer.on('connection', socket => {
     console.log('cliente conectado')
     socket.on('message', data =>{
-        console.log(data)
+        // console.log(data)
+        messages.push(data)
+        io.emit('messageLogs')
     })
-
-    socket.emit('evento-para-socket-individual', 'mensaje 1')
-
-    socket.broadcast.emit('evt-para-todos-menos-el-actual', 'mensaje 2')
-
-    socket.emit
 })
 //___________________________________________________________________________
 

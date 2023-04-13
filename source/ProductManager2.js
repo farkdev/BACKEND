@@ -18,16 +18,17 @@ class ProductManager {
         }
     }
 
-    async addProduct(titulo, descripcion, precio, thumbnail, code, stock) {
+    async addProduct(title, description, price, thumbnail, code, stock, category, status) {
       try {
         const product = {
-          titulo,
-          descripcion,
-          precio,
+          title,
+          description,
+          price,
           thumbnail,
           code,
           stock,
-      
+          category,
+          status
         };
 
       if (this.products.length === 0) {
@@ -93,11 +94,9 @@ class ProductManager {
       if (productIndex <=-1){
         throw new Error(`producto con ID ${id} no encontrado`)
       }
-      const oldData = products[productIndex]
-      const updatedProduct = {...oldData, ...newData}
-      products[productIndex] = updatedProduct
+      products.splice(productIndex, 1)
       await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2))
-      return updatedProduct
+      return products
     } catch(err){
       throw new Error(`no se pudo actualizar el producto ${err.message}`)
     }
@@ -123,13 +122,13 @@ const admin = new ProductManager
 //         .then(() => admin.getProducts().then(res => console.table(res))))
 //     .then(() => admin.getProducts())
 
-admin.deleteProduct(4)
-    .then((deletedProduct) => console.log(`Producto eliminado: ${JSON.stringify(deletedProduct)}`))
-    .then(() => admin.getProducts())
-    .then((products) => console.log(`Productos restantes: ${JSON.stringify(products)}`))
-    .catch((error) => console.error(`Error al eliminar el producto: ${error.message}`));
+// admin.deleteProduct(4)
+//     .then((deletedProduct) => console.log(`Producto eliminado: ${JSON.stringify(deletedProduct)}`))
+//     .then(() => admin.getProducts())
+//     .then((products) => console.log(`Productos restantes: ${JSON.stringify(products)}`))
+//     .catch((error) => console.error(`Error al eliminar el producto: ${error.message}`));
 
-admin.getProducts().then(res => console.table(res))
+// admin.getProducts().then(res => console.table(res))
 
 
 

@@ -39,7 +39,7 @@ class CartManager {
 
     
 
-    createCart = async ()=>{
+    createCart = async () => {
         try{
             let cartsArray = []
             if(!this.exists(this.cart)){
@@ -76,7 +76,7 @@ class CartManager {
             }
 
         } catch (error) {
-            console.log(`Erro adhiriendo los productos ${error.message}`)
+            console.log(`Error adhiriendo los productos ${error.message}`)
         }
     }
 
@@ -102,8 +102,8 @@ class CartManager {
                     const addProduct = cart.products.find(item => item.id === pid)
                     if(addProduct) {
                     addProduct.quantity++
-                    }else{
-                    cart.products.push({id: pid, quantity: 1 })
+                    } else {
+                        cart.products.push({id: pid, quantity: 1 })
                     }
                     await this.writeCart(carts)
                     this.cart = cart

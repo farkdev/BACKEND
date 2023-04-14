@@ -3,7 +3,7 @@ const fs = require('fs')
 class CartManager {
     constructor(){
         this.cart = []
-        this.path = './source/cart.json'
+        this.path = './cart.json'
         
     }
 
@@ -23,7 +23,7 @@ class CartManager {
     readCart = async() =>{
         try{
             const data = await fs.promises.readFile(this.path, 'utf-8')
-            this.cart = JSON.parse(data)
+            return JSON.parse(data)
         } catch (error) {
             console.log(error)
         }         
@@ -83,7 +83,7 @@ class CartManager {
     getCartById = async id => {
         try {
             if(this.exists(this.path)){
-                let carts = await this.readCart()
+                const carts = await this.readCart()
                 const cart = carts.find(item => item.id === id)
                 return cart ? cart : console.log('No se halló el producto')
         }

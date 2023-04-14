@@ -32,13 +32,13 @@ router.get('/', async (request, response)=>{
 
 router.get('/', async (request, response) =>{
     const limit = request.query.limit
-
+    console.log(limit)
     try{
      let productsToReturn = await PManager.getProducts()
      let products = productsToReturn
 
-     if(limit&& parseInt(limit) > 0){
-        productsToReturn = productsToReturn.slice(0,parseInt(limit))
+     if(limit&& limit > 0){
+        products = productsToReturn.slice(0,limit)
      }
      return response.send({products})
     } catch (error){

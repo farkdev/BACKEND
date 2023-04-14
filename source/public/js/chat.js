@@ -33,6 +33,6 @@ socket.on('messageLogs', data =>{
     let mensajes = ''
     data.forEach({usuario, message}) => {
         mensajes += `<li> ${user}  dice: ${message} </li>`
-    });
+    })
     log.innerHTML = mensajes
 })

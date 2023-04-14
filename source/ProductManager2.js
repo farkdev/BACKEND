@@ -83,13 +83,13 @@ class ProductManager {
         }
         return product;
     } catch (err) {
-        console.error(`No se pudo obtener el producto: ${err}`);
+        throw new Error(`No se pudo obtener el producto: ${err}`);
     }
   }
 
-  async deleteProduct(id, newData) {
+  async deleteProduct(id) {
     try{
-      const products = await this.getProductById()
+      const products = await this.getProducts()
       const productIndex = products.findIndex((product) => product.id === id)
       if (productIndex <=-1){
         throw new Error(`producto con ID ${id} no encontrado`)

@@ -1,0 +1,69 @@
+<div>
+  <h2>Agregar producto</h2>
+  
+  
+
+
+  <form>
+   <div class="formProduct">
+     <label for="exampleFormControlInput1">Título de producto</label>
+     <input type="text" class="form-control" id="title" placeholder="ingrese título">
+   </div>
+   <div class="formProduct">
+     <label for="exampleFormControlSelect1">Categoria</label>
+     <select class="form-control" id="category">
+       <option>Accesorios</option>
+       <option>Calzado</option>
+        <option>Deporte</option>
+       <option>Indumentaria</option>
+       <option>Otros</option>
+     </select>
+   </div>
+   <div class="form-group">
+     <label for="exampleFormControlSelect2">Precio</label>
+     <input type="number" class="form-control" id="price" placeholder="ingrese monto">
+    <div class="form-group">
+     <label for="formGroupExampleInput">Stock disponible</label>
+     <input type="number" class="form-control" id="stock" placeholder="ingrese stock disponible">
+   </div>
+   <div class="form-group">
+     <label for="formGroupExampleInput">Código de producto</label>
+     <input type="number" class="form-control" id="code" placeholder="ingrese código">
+   </div>
+   </div>
+   <div class="form-group">
+     <label for="exampleFormControlTextarea1">Descripción del producto</label>
+     <textarea class="form-control" id="description" rows="3"></textarea>
+   </div>
+    <input type="submit" value="enviar">
+  </form>
+
+<hr>
+
+
+  <h3>Listado de Productos en Tiempo Real</h3>
+  
+<hr>
+
+  <ul id="listaProductos">
+       {{#each listaProductosReal}}
+          
+        <li>Titulo {{this.titulo}}</li>
+        
+        <li>Descripcion {{this.descripcion}}</li>
+        
+        <li>Precio {{this.precio}}</li>
+        
+        <li>Stock {{this.stock}}</li>
+        <hr>
+       {{/each}}
+  </ul>
+
+</div>
+
+
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/static/js/realtimeprod.js"></script>

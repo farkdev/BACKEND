@@ -31,8 +31,22 @@ socket.on('messageLogs', data =>{
     // console.log(data)
     let log = document.getElementById('messageLogs')
     let mensajes = ''
-    data.forEach({usuario, message}) => {
+    data.forEach(({usuario, message}) => {
         mensajes += `<li> ${user}  dice: ${message} </li>`
     })
     log.innerHTML = mensajes
+})
+socket.on('newUserConnected', user => {
+    if (!user) {
+        return 
+    }
+
+    Swal.fire({
+        toast: true,
+        position: 'top-right',
+        showConfirmButton: false,
+        timer: 10000,
+        title: `${user} se a unido al chat`,
+        icon: 'success'
+    })
 })

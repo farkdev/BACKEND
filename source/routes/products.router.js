@@ -67,10 +67,10 @@ router.get('/:pid', async (request, response) => {
 router.post('/', (request, response)=>{
     try {
         const newProduct = request.body
-        if (!newProduct.title || !newProduct.description){
+        if (!newProduct.titulo || !newProduct.descripcion){
             return response.status(400).send({error: "el producto debe tener un titulo y descripción"})
         }
-        if(!Number.isFinite(newProduct.price) || newProduct.price <= 0){
+        if(!Number.isFinite(newProduct.precio) || newProduct.precio<= 0){
             return response.status(400).send({error: "precio debe ser un número positivo"})
         }
         if(!Number.isFinite(newProduct.code) || newProduct.code < 0 ){

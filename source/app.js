@@ -6,6 +6,8 @@ const handlebars = require('express-handlebars')
 const productsRouter = require('./routes/products.router')
 const cartRouter = require('./routes/carts.router.js')
 const {uploader} = require('./utils')
+const viewsRouter = require('./routes/views.router')
+const {socketProducts} = require ('./public/js/socketProducts')
 const app = express()
 
 //___________________________________________________________________________
@@ -22,12 +24,15 @@ app.get('/chat', (req, res)=>{
     res.render('chat', {})
 })
 
+// socketServer.on('connection', socket=>{
+//     console.log("cliente conectado")
+// })
 socketServer.on('connection', socket => {
     console.log('cliente conectado')
     socket.on('message', data =>{
-        // console.log(data)
-        messages.push(data)
-        io.emit('messageLogs')
+        console.log(data)
+        // messages.push(data)
+        // io.emit('messageLogs')
     })
 })
 //___________________________________________________________________________
@@ -50,6 +55,10 @@ app.use( (request, response, next)=>{
 
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartRouter)
+app.use('/', viewsRouter)
+app.use('/realtimeproducts', viewsRouter)
+
+
 
 
 
@@ -61,18 +70,4 @@ app.post('/single', uploader.single('myfile'), (req, res)=>{
 
 })
 
-
-app.get('/vista', (request, response)=>{
-    let user = users[Math.floor(Math.random () * users.length)]
-    let testUser = {
-        title: 'Tienda',
-        user,
-        isAdmin: user.role ==='admin',
-        food
-    }
-
-
-    response.render('index', testUser)
-})
-
-
+socketProducts(socketServer)

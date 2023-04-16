@@ -18,16 +18,16 @@ class ProductManager {
         }
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock, category, status) {
+    async addProduct(titulo, descripcion, precio, thumbnail, code, stock, categoria, status) {
       try {
         const product = {
-          title,
-          description,
-          price,
+          titulo,
+          descripcion,
+          precio,
           thumbnail,
           code,
           stock,
-          category,
+          categoria,
           status
         };
 

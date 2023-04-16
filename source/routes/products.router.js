@@ -17,36 +17,22 @@ let products = PManager.getProducts().then((data)=>{
 
 
 
+router.get('/', async (request, response) => {
+    try {
+        const limit = request.query.limit
+        let products = await PManager.getProducts()
 
+        if (limit && limit > 0) {
+            products = products.slice(0, limit)
+        }
 
-router.get('/', async (request, response)=>{
-    try{
-        const products = await PManager.getProducts()
-        response.send({status: 'success', payload: products})
+        return response.send({ status: 'success', payload: products })
     } catch (error) {
         console.log(error)
-        response.status(500).send({error: "ocurrió un error al obtener los productos"})
+        return response.status(500).send({ error: "Ocurrió un error al obtener los productos" })
     }
 })
 
-
-router.get('/', async (request, response) =>{
-    const limit = request.query.limit
-    console.log(limit)
-    try{
-     let productsToReturn = await PManager.getProducts()
-     let products = productsToReturn
-
-     if(limit&& limit > 0){
-        products = productsToReturn.slice(0,limit)
-     }
-     return response.send({products})
-    } catch (error){
-     console.log(error)
-     return response.status(500).send({error: "Ocurrió un error al obtener los productos"})
-    }
-
-})
 
 router.get('/:pid', async (request, response) => {
     const productId = request.params.pid;

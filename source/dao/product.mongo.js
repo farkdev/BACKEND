@@ -30,9 +30,21 @@ class ProductManagerMongo {
         }
     }
 
-    async updateProduct(pid){}
+    async updateProduct(pid, updatedProduct){
+        try {
+            return await productModel.findByIdAndUpdate(pid, updatedProduct, { new: true })
+        } catch (err) {
+            return new Error(err)
+        }
+    }
 
-    async deleteProduct(pid){}
+    async deleteProduct(pid){
+        try {
+            return await productModel.findByIdAndDelete(pid)
+        } catch (err) {
+            return new Error(err)
+        }
+    }
 }
 
 

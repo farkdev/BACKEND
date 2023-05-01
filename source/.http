@@ -10,12 +10,12 @@ POST http://localhost:8080/api/products/
 Content-Type: application/json
 
 {
-    "title": "Short deportivo",
-    "description": "Short Nike negro, talle M",
+    "title": "Medias Adidas",
+    "description": "Pack X3, blancas",
     "thumbnail": "",
-    "price": 3500,
-    "stock": 55,
-    "code": "311"
+    "price": 1500,
+    "stock": 25,
+    "code": "142"
 }
 
 

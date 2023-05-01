@@ -1,7 +1,7 @@
 const { connect } = require('mongoose')
 
 
-let url = 'mongodb+srv://farkdev:coderhouse@cluster0.p2tsobu.mongodb.net/test'
+let url = 'mongodb+srv://farkdev:coderhouse@cluster0.p2tsobu.mongodb.net/Store'
 
 module.exports = {
     connectDB: ()=>{

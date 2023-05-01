@@ -1,4 +1,4 @@
-const ProdManager = require('../../ProductManager2')
+const ProdManager = require('../../dao/ProductManager2')
 const PrManager = new ProdManager()
 
 const socketProducts = async(io) =>{

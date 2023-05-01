@@ -1,14 +1,13 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
-// const ProductManager = require('./ProductManager2');
 const products = require('./data.json')
 const handlebars = require('express-handlebars')
-const productsRouter = require('./routes/products.router')
-const cartRouter = require('./routes/carts.router.js')
-const {uploader} = require('./utils')
-const viewsRouter = require('./routes/views.router')
+const {uploader} = require('./utils/multer')
 const {socketProducts} = require ('./public/js/socketProducts')
 const app = express()
+const objectConfig = require('../source/config/objectConfig')
+const routerServer = require('../source/routes/index.router')
+
 
 //___________________________________________________________________________
 messages = []
@@ -45,21 +44,13 @@ console.log(__dirname+'/public')
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
-
-
-app.use( (request, response, next)=>{
-    console.log("mid a nivel aplicación: time", Date.now())
-    next()
-})
-
-
-app.use('/api/products', productsRouter)
-app.use('/api/carts', cartRouter)
-app.use('/', viewsRouter)
-app.use('/realtimeproducts', viewsRouter)
+objectConfig.connectDB()
 
 
 
+
+
+app.use(routerServer)
 
 
 app.post('/single', uploader.single('myfile'), (req, res)=>{
@@ -69,5 +60,15 @@ app.post('/single', uploader.single('myfile'), (req, res)=>{
     })
 
 })
+
+
+// app.use( (request, response, next)=>{
+//     console.log("mid a nivel aplicación: time", Date.now())
+//     next()
+// })
+
+
+
+
 
 socketProducts(socketServer)

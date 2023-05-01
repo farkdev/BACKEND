@@ -13,6 +13,7 @@ Swal.fire({
     allowOutsideClick: false
 }).then(result => {
     user = result.value
+    socket.emit('authenticated', user)
 })
 
 
@@ -36,6 +37,7 @@ socket.on('messageLogs', data =>{
     })
     log.innerHTML = mensajes
 })
+
 socket.on('newUserConnected', user => {
     if (!user) {
         return 

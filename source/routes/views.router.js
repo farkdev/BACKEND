@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const router = Router()
-const ProduMan = require('../ProductManager2')
+const ProduMan = require('../dao/ProductManager2')
+const { userModel } = require('../dao/models/products.model')
 const productos = new ProduMan()
 
 
@@ -82,15 +83,6 @@ router.get('/realtimeproducts', async(req, res) =>{
 
 
 
-
-
-
-
-
-
-
-
-
 const users = [
   {
     id: 1,
@@ -126,4 +118,22 @@ const ropa = [
   { name: "Zapatos", price: 50.50 },
   { name: "Gorra", price: 10.99 }
 ];
+
+
+
+router.get('/', async (req, res)=>{
+  try{
+    let users = await userModel.find()
+    console.log(users)
+    res.send("hello world")
+  }catch(error){
+    console.log(error)
+  }
+})
+
+
+
+
+
+
 module.exports = router

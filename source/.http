@@ -10,8 +10,23 @@ POST http://localhost:8080/api/products/
 Content-Type: application/json
 
 {
+    "title": "Camiseta termica",
+    "description": "Color Celeste, Talle M",
+    "thumbnail": "",
+    "price": 4500,
+    "stock": 16,
+    "code": "561"
+}
+
+
+
+###
+PUT http://localhost:8080/api/products/644ef882e9ac23b6dca65093
+Content-Type: application/json
+
+{
     "title": "Medias Adidas",
-    "description": "Pack X3, blancas",
+    "description": "Pack X3, negras",
     "thumbnail": "",
     "price": 1500,
     "stock": 25,
@@ -19,9 +34,5 @@ Content-Type: application/json
 }
 
 
-
 ###
-PUT http://localhost:8080/api/products/id
-
-###
-DELETE http://localhost:8080/api/products/id
+DELETE http://localhost:8080/api/products/64527a531ea0e4a1a496d305

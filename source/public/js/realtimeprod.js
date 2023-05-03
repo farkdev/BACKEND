@@ -1,6 +1,6 @@
 const socket = io()
 
-let form = document.querySelector('#formProduct')
+let form = document.querySelector('.formProduct')
 
 form.addEventListener('submit', evt => {
     evt.preventDefault()

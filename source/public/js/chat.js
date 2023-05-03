@@ -1,3 +1,5 @@
+
+
 console.log("Socket")
 const socket = io()
 let user
@@ -10,29 +12,30 @@ Swal.fire({
     inputValidator: (value)=>{
         return !value && 'el nombre de usuario es obligatorio'
     },
-    allowOutsideClick: false
+    allowOutsideClick: false,
+    allowEscapeKey: false
 }).then(result => {
     user = result.value
     socket.emit('authenticated', user)
 })
 
 
-chatbox.addEventListener('keyup', evt =>{
-    if(evt.key==='Enter'){
-        if(chatbox.value.trim().lenght>0){
-            socket.emit('message', {
-                user, message: chatbox.value
-            })
-            chatbox.value=''
-        }
+document.getElementById('messageForm').addEventListener('submit', evt => {
+    evt.preventDefault();
+    if(chatbox.value.trim().length>0){
+        socket.emit('message', {
+            user, message: chatbox.value
+        })
+        chatbox.value=''
     }
 })
+
 
 socket.on('messageLogs', data =>{
     // console.log(data)
     let log = document.getElementById('messageLogs')
     let mensajes = ''
-    data.forEach(({usuario, message}) => {
+    data.forEach(({user, message}) => {
         mensajes += `<li> ${user}  dice: ${message} </li>`
     })
     log.innerHTML = mensajes

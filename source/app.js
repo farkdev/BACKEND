@@ -8,9 +8,9 @@ const app = express()
 const objectConfig = require('../source/config/objectConfig')
 const routerServer = require('../source/routes/index.router')
 
-
 //___________________________________________________________________________
 messages = []
+const messageManager = require('../source/dao/chat.mongo')
 
 const { Server } = require('socket.io')
 const httpServer = app.listen(8080, ()=>{
@@ -19,20 +19,27 @@ const httpServer = app.listen(8080, ()=>{
 
 const socketServer = new Server(httpServer)
 
-app.get('/chat', (req, res)=>{
-    res.render('chat', {})
+socketServer.on('connection', socket => {
+    console.log('Cliente conectado')
+    socket.on('message', data =>{
+        console.log(`Mensaje recibido de ${data.user}: ${data.message}`)
+        const message = {
+            user: data.user,
+            message: data.message,
+            timestamp: Date.now()
+        }
+        messageManager.saveMessage(message)
+        socket.broadcast.emit('message', message)
+    })
+    
+
+    })
+    messageManager.allMessages().then(messages => {
+        socketServer.emit('messageLogs', messages);
 })
 
-// socketServer.on('connection', socket=>{
-//     console.log("cliente conectado")
-// })
-socketServer.on('connection', socket => {
-    console.log('cliente conectado')
-    socket.on('message', data =>{
-        console.log(data)
-        // messages.push(data)
-        // io.emit('messageLogs')
-    })
+app.get('/chat', (req, res)=>{
+    res.render('chat', {})
 })
 //___________________________________________________________________________
 

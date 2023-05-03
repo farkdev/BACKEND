@@ -7,7 +7,21 @@ const colecction = 'messages'
 
 const messagesSchema = new Schema({
 
-    user:correoDelUsuario, 
-    message: ""
+    user: {
+        type: String,
+        required: true
+    },
+    message: {
+        type: String,
+        required: true
+    }
     
 })
+
+
+const Message = model(colecction, messagesSchema)
+
+
+module.exports = {
+    Message
+}

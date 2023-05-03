@@ -61,13 +61,37 @@ router.post('/', async (req, res)=>{
     }
 })
 
-router.put('/:pid', async (req,res)=>{
-    res.status(200).send("actualizar producto")
-})
+router.put('/:pid', async (req, res) => {
+    const { pid } = request.params
+    const productId = pid
+    const updatedProduct = req.body;
+  
+    try {
+      const result = await ProductManagerMongo.updateProduct(productId, updatedProduct);
+      res.status(200).send({
+        status: 'success',
+        payload: result
+      })
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al actualizar producto' });
+    }
+});
 
 
-router.delete('/:pid', async (req,res)=>{
-    res.status(200).send("borrar producto")
+router.delete('/:id', async (req,res)=>{
+    try {
+        const productId = req.params.id;
+        const deletedProduct= await ProductManagerMongo.deleteProduct(productId);
+    
+        if (!deletedProduct) {
+            return res.status(404).send({ error: 'Producto no encontrado' });
+        }
+        return res.status(200).send({deletedProduct})
+    } catch (error){
+        console.error(error)
+        return res.status(500).send({ error: "Ocurrió un error al eliminar el producto" })
+    }
 })
 
 

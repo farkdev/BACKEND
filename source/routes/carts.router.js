@@ -8,6 +8,23 @@ const CartMan = new CartManager('./cart.json')
 
 const router1 = new Router()
 
+router.post('/cart', async (req, res) => {
+  try {
+    const cart = await CartManagerMongo.createCart(req.body)
+    res.status(201).send({
+      status: 'success',
+      payload: cart
+    })
+  } catch (err) {
+    console.error(err)
+    res.status(500).send({
+      status: 'error',
+      message: 'An error occurred while creating the cart'
+    })
+  }
+})
+
+
 
 router.get('/', async (req, res)=>{
   try {

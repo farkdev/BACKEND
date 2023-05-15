@@ -35,4 +35,23 @@ Content-Type: application/json
 
 
 ###
-DELETE http://localhost:8080/api/products/64527a531ea0e4a1a496d305
+DELETE http://localhost:8080/api/products/645ebf4a084caa77e6912f72
+
+
+
+
+
+//BUSCAR CARRITOS
+###
+GET http://localhost:8080/api/carts/
+
+
+
+
+
+
+
+
+//CART POR ID
+###
+GET http://localhost:8080/api/carts/646183ba1e374d2035f018b3

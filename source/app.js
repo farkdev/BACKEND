@@ -7,6 +7,11 @@ const {socketProducts} = require ('./public/js/socketProducts')
 const app = express()
 const objectConfig = require('../source/config/objectConfig')
 const routerServer = require('../source/routes/index.router')
+const session = require('express-session')
+
+
+
+
 
 //___________________________________________________________________________
 messages = []
@@ -22,20 +27,21 @@ const socketServer = new Server(httpServer)
 socketServer.on('connection', socket => {
     console.log('Cliente conectado')
     socket.on('message', data =>{
-        console.log(`Mensaje recibido de ${data.user}: ${data.message}`)
+        console.log(`Mensaje recibido ${data.message}`)
         const message = {
             user: data.user,
-            message: data.message,
-            timestamp: Date.now()
+            message: String(data.message),
+            
         }
-        messageManager.saveMessage(message)
-        socket.broadcast.emit('message', message)
-    })
-    
+        messageManager.saveMessage(message.user, message.message)
+        socket.broadcast.emit("message", message);
 
     })
+
     messageManager.allMessages().then(messages => {
         socketServer.emit('messageLogs', messages);
+    })
+
 })
 
 app.get('/chat', (req, res)=>{
@@ -57,7 +63,52 @@ objectConfig.connectDB()
 
 
 
+//cookies
+app.use('/prueba', (req, res)=>{
+    res.render('prueba')
+})
+
+app.get('/cookie', (req, res) => {
+    const name = req.query.name;
+    const email = req.query.email;
+    const cookie = `name=${name}; email=${email}`;
+    res.cookie('myCookie', cookie);
+    res.json({ cookie });
+})
+
+//session
+// app.use(session({
+//     secret: "secretCoder",
+//     resave: true, //mantiene sesión activa
+//     saveUninitialized: true
+// }))
+
+
+
+
+
+
+
+
+
 app.use(routerServer)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.post('/single', uploader.single('myfile'), (req, res)=>{

@@ -31,15 +31,13 @@ document.getElementById('messageForm').addEventListener('submit', evt => {
 })
 
 
-socket.on('messageLogs', data =>{
-    // console.log(data)
+socket.on('message', message => {
     let log = document.getElementById('messageLogs')
-    let mensajes = ''
-    data.forEach(({user, message}) => {
-        mensajes += `<li> ${user}  dice: ${message} </li>`
-    })
+    let mensajes = log.innerHTML
+    mensajes += `<li> ${message.user}  dice: ${message.message} </li>`
     log.innerHTML = mensajes
-})
+  })
+  
 
 socket.on('newUserConnected', user => {
     if (!user) {

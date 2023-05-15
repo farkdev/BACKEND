@@ -6,7 +6,6 @@ const colecction = 'messages'
 
 
 const messagesSchema = new Schema({
-
     user: {
         type: String,
         required: true
@@ -15,8 +14,11 @@ const messagesSchema = new Schema({
         type: String,
         required: true
     }
-    
-})
+},
+    {
+        timestamps: true
+    }
+)
 
 
 const Message = model(colecction, messagesSchema)

@@ -1,36 +1,31 @@
 
-<div class="product-list">
-  {{#each lista}}
-  <div class="product-item">
-    
-    <div class="product-details">
-      
-      <h4>{{this.titulo}}</h4>
-      <p class="product-price"> ID: {{this.id}}</p>
-      <p class="product-description">{{this.descripcion}}</p>
-      <p class="product-price">$ {{this.precio}}</p>
+<h1>Productos</h1>
+  
+<div>
 
-    
-    </div>
-  </div>
+  {{#each products}}
+    <li><h4>Nombre: {{this.title}}</h4>
+    <p>Descripción: {{this.description}}</p>
+    <p>Precio: ${{this.price}}</p>
+    <a href="/product/{{this.id}}">Ver detalles</a></li>
   {{/each}}
+
 </div>
-{{!-- <div>
-    <h1>Lista de Productos</h1>
 
 
-    <ul>
-        {{#each lista}}
-            <p>Título</p>
-            <li>{{this.titulo}}</li>
-            <p>Descripción</p>
-            <li>{{this.descripcion}}</li>
-            <p>Precio</p>
-            <li>{{this.precio}}</li>
-            <p>Stock disponible</p>
-            <li>{{this.stock}}</li>
-        {{/each}}
-    </ul>
-    
-</div> --}}
+
+<!-- Páginas -->
+<center>
+  <p>Total de páginas: {{totalPages}}</p>
+  {{#if hasPrevPage}}
+   <a href="/api/products?page={{prevPage}}"><button>Anterior</button></a>
+  {{/if}}
+  {{#if hasNextPage}}
+   <a href="/api/products?page={{nextPage}}"><button>Siguiente</button></a>
+  {{/if}}
+</center>
+  
+
+
+
 <script src="/static/js/socketProducts.js"></script>

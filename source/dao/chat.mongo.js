@@ -5,10 +5,10 @@ class ChatMongo {
 
   async saveMessage (user, message) {
     try{
-      const newMessage = new Message({
-        user, 
+      const newMessage = new Message({ 
+        user,
         message,
-        timestamp: new Date()
+      
       });
       await newMessage.save()
       console.log("Mensaje guardado")
@@ -24,7 +24,7 @@ class ChatMongo {
     // Para obtener todos los mensajes de la base de datos:
     async allMessages() {
       try{
-        const messages = await Message.find({}).sort({ timestamp: 1})
+        const messages = await Message.find({}).sort({ createdAt: 1 })
         console.log("Mensajes cargados desde MONGODB", messages)
         return messages
       } catch (err){

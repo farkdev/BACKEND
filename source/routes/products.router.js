@@ -8,7 +8,6 @@ const router = new Router()
 
 
 
-
 function mid1(request, response, next){
     // request.dato1 = 'dato uno'
     response.send("no tenes permiso")
@@ -23,7 +22,7 @@ let products = PManager.getProducts().then((data)=>{
 
 router.get('/', async (req, res)=>{
     try {
-        const products = await ProductManagerMongo.getProducts()
+        const products = await ProductManagerMongo.getProductsM()
         res.status(200).send({
             status: 'success',
             payload: products

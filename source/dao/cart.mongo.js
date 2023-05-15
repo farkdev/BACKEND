@@ -46,7 +46,27 @@ class CartManagerMongo {
             return new Error(err)
         }
     }
+
+    async removeAllProductsFromCart(cid) {
+        try {
+          const cart = await cartModel.findById(cid);
+    
+          if (!cart) {
+            return null; // Carrito no encontrado
+          }
+    
+          cart.items = []; // Elimina todos los productos del carrito
+          cart.total = 0; // Resetea el total del carrito
+    
+          await cart.save();
+    
+          return cart;
+        } catch (err) {
+          throw new Error(err);
+        }
+    }
 }
+
 
 
 module.exports = CartManagerMongo

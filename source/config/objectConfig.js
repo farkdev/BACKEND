@@ -6,9 +6,10 @@ let url = 'mongodb+srv://farkdev:coderhouse@cluster0.p2tsobu.mongodb.net/Store'
 
 module.exports = {
     connectDB: async ()=>{
-
+        console.log("base de datos conectada")
         connect(url)
-        
+       
+    
         const filtro = await productModel.aggregate([
             {
                 $match: {price: 1500}

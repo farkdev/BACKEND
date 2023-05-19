@@ -7,7 +7,7 @@ class ProductManagerMongo {
     
     async getProductsM (){
         try {
-            return await productModel.find({})
+            return await productModel.find({}).lean()
         }catch (err){
             return new Error(err)
         }
@@ -48,4 +48,4 @@ class ProductManagerMongo {
 }
 
 
-module.exports = new ProductManagerMongo;
+module.exports =  ProductManagerMongo;

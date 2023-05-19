@@ -10,12 +10,12 @@ POST http://localhost:8080/api/products/
 Content-Type: application/json
 
 {
-    "title": "Camiseta termica",
-    "description": "Color Celeste, Talle M",
+    "title": "Remera Nike",
+    "description": "Color Negra, Talle S",
     "thumbnail": "",
-    "price": 4500,
-    "stock": 16,
-    "code": "561"
+    "price": 5500,
+    "stock": 23,
+    "code": "961"
 }
 
 
@@ -29,7 +29,7 @@ Content-Type: application/json
     "description": "Pack X3, negras",
     "thumbnail": "",
     "price": 1500,
-    "stock": 25,
+    "stock": 20,
     "code": "142"
 }
 
@@ -38,6 +38,13 @@ Content-Type: application/json
 DELETE http://localhost:8080/api/products/645ebf4a084caa77e6912f72
 
 
+//CARRITOS!!!
+
+
+
+###
+//CREA CARRITO
+POST  http://localhost:8080/api/carts/cart
 
 
 
@@ -48,10 +55,12 @@ GET http://localhost:8080/api/carts/
 
 
 
-
-
-
-
 //CART POR ID
 ###
-GET http://localhost:8080/api/carts/646183ba1e374d2035f018b3
+GET http://localhost:8080/api/carts/646286f80b3d225b3483875a
+
+
+
+//Eliminar CARRITO
+###
+DELETE http://localhost:8080/api/carts/646183ba1e374d2035f018b3

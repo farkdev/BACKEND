@@ -1,63 +1,105 @@
 const { Router } = require('express')
 const router = Router()
-const ProduMan = require('../dao/ProductManager2')
-const { produc, productModel } = require('../dao/models/products.model')
-const productMongo = require('../dao/product.mongo')
-const productos = new ProduMan()
+const { productModel } = require('../dao/models/products.model')
+const ProductManagerMongo = require('../dao/product.mongo')
+const productsManager = new ProductManagerMongo;
 
 router.get('/', async (req, res) => {
-  try{ 
-    const {page=1, limit=5, sort=""} = req.query
-    let sortOptions={}
-    if (sort === 'asc') {
-
-        sortOptions = { price: 1 };
-
-    } else if (sort === 'desc') {
-
-        sortOptions = { price: -1 };
-
-    }
-    const listPro = await productModel.paginate({}, {limit, page, sort, lean: true})
-    const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, totalPages} = listPro
-    res.render('home',{
-      status: 'success',
-      products: docs,
-      hasPrevPage,
-      hasNextPage,
-      prevPage,
-      nextPage,
-      totalPages,
-      title: "Productos"
-    })
+  try {
+    const result = await productsManager.getProductsM();
     
-  } catch (error){
-    console.log(error)
+    res.render('home', {
+      title: "Lista de Productos",
+      payload: result
+    });
+  } catch (err) {
+    console.log(err);
+    res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
+  }
+});
+
+
+
+router.get('/products', async(req,res)=>{
+  try{
+      const {limit = 4}= req.query
+      const{page=1} = req.query
+      const { sort } = req.query;
+      let sortOptions={}
+
+      if (sort === 'asc') {
+          sortOptions = { price: 1 };
+      } else if (sort === 'desc') {
+          sortOptions = { price: -1 };
+      }
+      
+      let { 
+          docs, 
+          totalPages,
+          prevPage, 
+          nextPage,
+          hasPrevPage, 
+          hasNextPage 
+      } = await productModel.paginate({},{limit: limit , page: page, sort: sortOptions,lean: true})
+
+      !hasPrevPage
+      ? prevLink = null
+      : prevLink =`/products?page=${prevPage}&limit=${limit}&sort=${sort}`
+
+      !hasNextPage 
+      ?nextLink = null
+      :nextLink =`/products?page=${nextPage}&limit=${limit}&sort=${sort}`
+      res.render('products',{
+          status: 'success',
+          payload: docs,
+          totalPages,
+          prevPage,
+          nextPage,
+          page,
+          hasPrevPage,
+          hasNextPage,
+          prevLink,
+          nextLink
+      })
+  }catch(err){
+      console.log(err)
   }
 })
 
-
-// router.get('/', async (req, res)=>{
-//   try {
-//     const mongdbProducts = await productMongo.getProductsM({}, {lean: true})
-//     const prodMongo = mongdbProducts.map(product => product.toObject())
-//     const data = { productos: prodMongo}
-//     res.render('home', data)
+//PROBANDO QUE MANERA FUNCIONA
+// router.get('/products', async (req, res) => {
+//   try{ 
+//     const {page=1, limit=4, sort="asc"} = req.query
+//     let sortOptions={}
+//     if (sort === 'asc') {
+//         sortOptions = { price: 1 };
+//     } else if (sort === 'desc') {
+//         sortOptions = { price: -1 };
+//     }
+//     const listPro = await productModel.paginate({}, {limit, page, sort, lean: true})
+//     const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, totalPages} = listPro
+//     const prevLink = hasPrevPage ? `/products/?page=${prevPage}` : '/';
+//     const nextLink = hasNextPage ? `/products/?page=${nextPage}` : '/';
+//     res.render('products',{
+//       status: 'success',
+//       products: docs,
+//       hasPrevPage,
+//       hasNextPage,
+//       nextPage,
+//       prevPage,
+//       prevLink,
+//       nextLink,
+//       totalPages,
+//       listPro,
+//       title: "Productos"
+//     })
 //   } catch (error){
-//     console.error("Error al obtener productos desde MongoDB", error)
-//     res.status(500).send("error en el servidor")
-//    }
-// })
-
-
-
-// router.get('/', async (req, res)=>{
-//   const Productlist = await productos.getProducts()
-//   let datosProd = {
-//     lista: Productlist
+//     console.log(error)
 //   }
-//   res.render('home', datosProd)
 // })
+
+
+
 
 router.get('/realtimeproducts', async(req, res) =>{
     
@@ -83,97 +125,6 @@ router.get('/realtimeproducts', async(req, res) =>{
 
 
 
-
-
-
-
-
-
-
-
-
-// router.get('/', async (req, res)=>{
-//   res.render('index', {})
-
-  
-// })
-
-
-
-// router.get('/', (request, response)=>{
-//     let user = users[Math.floor(Math.random () * users.length)]
-//     let testUser = {
-//         title: 'Tienda',
-//         user,
-//         isAdmin: users.admin ==='si',
-//     }
-
-
-     
-    
-    
-//     response.render('index', {
-//         testUser,
-//         style: 'index.css',
-//         isAdmin: user.admin ==='si',
-//         ropa
-//     })
-// })
-
-
-
-
-
-
-
-
-// const users = [
-//   {
-//     id: 1,
-//     name: "Juan",
-//     email: "juan@gmail.com",
-//     age: 25,
-//     city: "Madrid",
-//     country: "Spain",
-//     admin: "si"
-//   },
-//   {
-//     id: 2,
-//     name: "María",
-//     email: "maria@hotmail.com",
-//     age: 30,
-//     city: "Barcelona",
-//     country: "Spain",
-//     admin: "no"
-//   },
-//   {
-//     id: 3,
-//     name: "Pedro",
-//     email: "pedro@yahoo.com",
-//     age: 27,
-//     city: "Valencia",
-//     country: "Spain",
-//     admin: "si"
-//   }
-// ];
-// const ropa = [
-//   { name: "Camiseta", price: 20.99 },
-//   { name: "Pantalón", price: 35.99 },
-//   { name: "Zapatos", price: 50.50 },
-//   { name: "Gorra", price: 10.99 }
-// ];
-
-
-
-// router.get('/', async (req, res)=>{
-//   try{
-//     let users = await userModel.find()
-//     console.log(users)
-//     res.send("hello world")
-//   }catch(error){
-//     console.log(error)
-//   }
-// })
 
 
 

@@ -7,10 +7,11 @@ const productsManager = new ProductManagerMongo;
 router.get('/', async (req, res) => {
   try {
     const result = await productsManager.getProductsM();
-    
+    let user = req.session.user
     res.render('home', {
       title: "Lista de Productos",
-      payload: result
+      payload: result,
+      user
     });
   } catch (err) {
     console.log(err);

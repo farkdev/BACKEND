@@ -79,7 +79,7 @@ app.get('/cookie', (req, res) => {
 
 app.use(session({
 	store: MongoStore.create({
-		ttl: 100000*60,
+		ttl: 100000 * 60,
 		mongoUrl: 'mongodb+srv://farkdev:coderhouse@cluster0.p2tsobu.mongodb.net/?retryWrites=true&w=majority',
 		mongoOptions: {
 			useNewUrlParser: true,
@@ -93,29 +93,7 @@ app.use(session({
 }))
 
 
-
-
-
-
-
-
-
 app.use(routerServer)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -133,7 +111,6 @@ app.post('/single', uploader.single('myfile'), (req, res)=>{
 //     console.log("mid a nivel aplicación: time", Date.now())
 //     next()
 // })
-
 
 
 

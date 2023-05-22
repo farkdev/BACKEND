@@ -1,9 +1,10 @@
 const { Router } = require('express')
 const { userModel } = require('../dao/models/user.model')
 const {auth} = require('../middlewares/auth.middleware')
-
-// obj
 const router = Router()
+
+
+
 
 router.get('/',  async (req, res)=>{
     try {
@@ -36,18 +37,18 @@ router.get('/',  async (req, res)=>{
 })
 //LOGIN DE USUARIO
 router.post('/login', async (req,res)=>{
-    const {email, password} = req.body
+    let {email, password} = req.body
     email = email.trim()
     password = password.trim()
     if(!email || !password){
         return res.status(400).send({status: 'error', message: "Email y contraseña son obligatorios"})
     }
     let role = "user"
-    if(email === "admin@coder.com" && password === "adminCod3r123"){
+    if(email === "adminCoder@coder.com" && password === "adminCod3r123"){
         role = "admin"
     }
     const userDB = await userModel.findOne({email, password})
-    if(!userDB) return res.status(404).send({status: "error", message: "Usuario o contraseña incorrecto"})
+    if(!userDB) return res.status(404).json({status: "error", message: "Usuario o contraseña incorrecto"})
 
     req.session.user = {
         first_name: userDB.first_name,
@@ -76,15 +77,17 @@ router.post('/register', async (req, res)=>{
             last_name,
             email,
             date_of_birth,
-            password
+            password,
+            title: "Register"
         } 
         
         await userModel.create(newUser) 
 
         
-        res.status(200).send("Registro exitoso")
+        res.status(200).json({ status: 'success', message: 'Registro exitoso' });
     } catch (error) {
-        console.log(error)
+        res.status(500).json({ status: 'error', message: 'Error interno del servidor' });
+
     }
     
 })

@@ -7,15 +7,25 @@ const collection = 'usuarios'
 const userSchema = new Schema({ 
     first_name: {
         type: String,
-        index: true
+        index: true,
+        required: true
     },
     last_name: {
-        type: String
+        type: String,
+        required: true
     },
     email: {
         type: String,
         required: true,
         unique: true
+    },
+    date_of_birth: {
+        type: Date,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
     }
 })
 userSchema.plugin(mongoosePaginate)

@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const { userModel } = require('../dao/models/user.model')
+const {auth} = require('../middlewares/auth.middleware')
 
 // obj
 const router = Router()
@@ -33,58 +34,70 @@ router.get('/',  async (req, res)=>{
         console.log(error)
     }
 })
+//LOGIN DE USUARIO
+router.post('/login', async (req,res)=>{
+    const {email, password} = req.body
+    email = email.trim()
+    password = password.trim()
+    if(!email || !password){
+        return res.status(400).send({status: 'error', message: "Email y contraseña son obligatorios"})
+    }
+    let role = "user"
+    if(email === "admin@coder.com" && password === "adminCod3r123"){
+        role = "admin"
+    }
+    const userDB = await userModel.findOne({email, password})
+    if(!userDB) return res.status(404).send({status: "error", message: "Usuario o contraseña incorrecto"})
 
-// POST http://localhost:8080 /usuarios
-router.post('/', async (req, res)=>{
+    req.session.user = {
+        first_name: userDB.first_name,
+        last_name: userDB.last_name,
+        email: userDB.email,
+        date_of_birth: userDB.date_of_birth,
+        password: userDB.password,
+        role: role
+    }
+    res.redirect('/')
+})
+
+
+
+// REGISTRO DE USUARIO
+router.post('/register', async (req, res)=>{
     try {
-        let user = req.body
-
-        if(!user.nombre || !user.apellido){ 
-            return res.status(400).send({status:'error', mensaje: 'todos los campos son necesarios'})
+        const {first_name, last_name, email, date_of_birth, password }  = req.body
+        const existUser = await userModel.findOne({email})
+        if(existUser){ 
+            return res.send({status:'error', mensaje: "el email ya se encuentra registrado"})
         }
 
         const newUser = {
-            first_name: user.nombre, 
-            last_name: user.apellido,
-            email: user.email
+            first_name, 
+            last_name,
+            email,
+            date_of_birth,
+            password
         } 
         
-        let result =  await userModel.create(newUser) 
+        await userModel.create(newUser) 
 
         
-        res.status(200).send({result})
+        res.status(200).send("Registro exitoso")
     } catch (error) {
         console.log(error)
     }
     
 })
 
-// PUT http://localhost:8080 /usuarios
-router.put('/:uid', async (req, res) => {
-    const { uid } = req.params
-    const user = req.body
-
-    // validar pid 
-    // if(!id)   
-    // validar campos 
-    if(!user.nombre || !user.apellido){ 
-        return res.status(400).send({status:'error', mensaje: 'todos los campos son necesarios'})
-    }
-   
-    let  userToReplace = {
-        first_name: user.nombre,
-        last_name: user.apellido,
-        email: user.email
-    }
-
-    let result = await userModel.updateOne({_id: uid}, userToReplace)
-    
-
-    res.send({
-        status: 'success',
-        payload: result
+router.get('/logout', async (req, res) =>{
+    req.session.destroy(err=> {
+        if(err){
+            res.send({status: 'error', error: err})
+        }
+        res.redirect('login')
     })
 })
+
 
 
 router.delete('/:uid', async (req, res) => {
@@ -99,5 +112,22 @@ router.delete('/:uid', async (req, res) => {
         console.log(error)
     }
 })
+
+router.get('/counter', (req,res)=>{
+    if(req.session.counter){
+        req.session.counter++
+        res.send(`se ha visitado el sitio ${req.session.counter} veces`)
+    }else{
+        req.session.counter =1
+        res.send('Bienvenido')
+    }
+})
+
+// router.get('/private', auth,(req,res)=>{
+//     res.send('Only admin')
+// })
+
+
+
 
 module.exports = router

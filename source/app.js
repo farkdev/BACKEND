@@ -9,6 +9,7 @@ const objectConfig = require('../source/config/objectConfig')
 const routerServer = require('../source/routes/index.router')
 const session = require('express-session')
 
+const MongoStore = require('connect-mongo')
 
 
 
@@ -76,12 +77,20 @@ app.get('/cookie', (req, res) => {
     res.json({ cookie });
 })
 
-//session
-// app.use(session({
-//     secret: "secretCoder",
-//     resave: true, //mantiene sesión activa
-//     saveUninitialized: true
-// }))
+app.use(session({
+	store: MongoStore.create({
+		ttl: 100000*60,
+		mongoUrl: 'mongodb+srv://farkdev:coderhouse@cluster0.p2tsobu.mongodb.net/?retryWrites=true&w=majority',
+		mongoOptions: {
+			useNewUrlParser: true,
+			useUnifiedTopology: true
+		}
+
+	}),
+	secret: 'secretCoder',
+	resave: false,
+	saveUninitialized: false
+}))
 
 
 

@@ -9,10 +9,11 @@ const users = require('./user.router')
 
 
 
+
 router.use('/api/products', productsRouter)
 router.use('/api/carts', cartRouter)
 router.use('/', viewsRouter)
-router.use('/users', users)
+router.use('/api/users', users)
 router.use('/realtimeproducts', viewsRouter)
 // router.use('/prueba')
 

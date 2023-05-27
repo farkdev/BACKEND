@@ -12,8 +12,8 @@ const users = require('./user.router')
 
 router.use('/api/products', productsRouter)
 router.use('/api/carts', cartRouter)
-router.use('/', viewsRouter)
-router.use('/api/users', users)
+router.use('/', viewsRouter, users)
+// router.use('/api/session', users)
 router.use('/realtimeproducts', viewsRouter)
 // router.use('/prueba')
 

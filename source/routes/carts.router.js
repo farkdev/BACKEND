@@ -3,7 +3,7 @@ const CartManagerMongo = require('../dao/cart.mongo');
 
 
 const router = Router()
-const cartManager = CartManagerMongo
+const cartManager = new CartManagerMongo
 
 // crea carrito
 router.post('/cart', async(req, res)=>{

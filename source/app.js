@@ -8,10 +8,10 @@ const app = express()
 const objectConfig = require('../source/config/objectConfig')
 const routerServer = require('../source/routes/index.router')
 const session = require('express-session')
-
+const cookie = require('./routes/prueba.router')
 const MongoStore = require('connect-mongo')
-
-
+const { initPassportMid, initPassportGithub } = require('./config/passport.config')
+const passport = require('passport')
 
 
 //___________________________________________________________________________
@@ -19,6 +19,8 @@ messages = []
 const messageManager = require('../source/dao/chat.mongo')
 
 const { Server } = require('socket.io')
+
+
 const httpServer = app.listen(8080, ()=>{
     console.log("servidor funcionando!")
 })
@@ -61,14 +63,17 @@ app.use(cookieParser())
 objectConfig.connectDB()
 
 
-
+// initPassportMid()
+initPassportGithub()
+passport.use(passport.initialize())
+passport.use(passport.session())
 
 
 //cookies
 app.use('/prueba', (req, res)=>{
     res.render('prueba')
 })
-
+app.use(cookieParser('CoderS3CR3T0'))
 app.get('/cookie', (req, res) => {
     const name = req.query.name;
     const email = req.query.email;
@@ -92,7 +97,7 @@ app.use(session({
 	saveUninitialized: false
 }))
 
-
+app.use(cookie)
 app.use(routerServer)
 
 

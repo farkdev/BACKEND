@@ -51,21 +51,6 @@ router.get('/',  async (req, res)=>{
 //     res.redirect('/')
 // })
 
-router.post('/login', passport.authenticate('login', {failureRedirect: '/failregister'}), async (req,res)=>{
-    if (!req.user) return res.status(401).send({status: 'error', message: "credenciales incorrectas"})
-    req.session.user = {
-        first_name: req.user.first_name,
-        last_name: req.user.last_name, 
-        email: req.user_email
-
-    }
-    res.send({status: 'success', message: "Iniciaste sesión"})
-})
-router.get('/faillogin', async(req,res)=>{
-    console.log('fallo login')
-    res.send({status: 'error', message:'fallo autenticacion'})
-})
-
 // REGISTRO DE USUARIO
 // router.post('/register', async (req, res)=>{
 //     try {
@@ -90,16 +75,84 @@ router.get('/faillogin', async(req,res)=>{
 // })
 
 
+
+
+
+
+
+
+
+
+
+// LOGIN GITHUB
+
+
+// router.post('/login', passport.authenticate('login', {failureRedirect: '/faillogin'}), async (req,res)=>{
+//     if (!req.user) return res.status(401).send({status: 'error', message: "credenciales incorrectas"})
+//     req.session.user = {
+//         first_name: req.user.first_name,
+//         last_name: req.user.last_name, 
+//         email: req.user_email
+
+//     }
+//     res.send({status: 'success', message: "Iniciaste sesión"})
+// })
+
+
+
+// router.post('/register', passport.authenticate('register', {
+//     failureRedirect: '/failregister',
+// }), async (req,res)=>{
+//     res.send({status: 'success', message: "Usuario registrado"})
+// })
+
+// router.get('/github', passport.authenticate('github', {scope:['user:email']}))
+
+// router.get('/githubcallback',passport.authenticate('github',{failureRedirect:'/login'}), async(req,res)=>{
+//     req.session.user=req.user
+//     res.redirect('/')
+// })
+
+
+
+
+
+
+
+//LOGIN JWT
+
+router.post('/login', passport.authenticate('login', {failureRedirect: '/faillogin'}), async (req,res)=>{
+    if (!req.user) return res.status(401).send({status: 'error', message: "credenciales incorrectas"})
+    req.session.user = {
+        first_name: req.user.first_name,
+        last_name: req.user.last_name, 
+        email: req.user_email
+
+    }
+    res.send({status: 'success', message: "Iniciaste sesión"})
+})
+
 router.post('/register', passport.authenticate('register', {
     failureRedirect: '/failregister',
 }), async (req,res)=>{
     res.send({status: 'success', message: "Usuario registrado"})
 })
 
+
+
+
+
+
+router.get('/faillogin', async(req,res)=>{
+    console.log('fallo login')
+    res.send({status: 'error', message:'fallo autenticacion'})
+})
 router.get('/failregister', async(req,res)=>{
     console.log('fallo')
     res.send({status: 'error', message:'fallo autenticacion'})
 })
+
+
 
 
 
@@ -125,12 +178,6 @@ router.get('/logout', async (req, res) =>{
     })
 })
 
-router.get('/github', passport.authenticate('github', {scope:['user:email']}))
-
-router.get('/githubcallback',passport.authenticate('github',{failureRedirect:'/login'}), async(req,res)=>{
-    req.session.user=req.user
-    res.redirect('/')
-})
 
 
 router.delete('/:uid', async (req, res) => {

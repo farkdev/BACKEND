@@ -66,6 +66,7 @@ const initPassportGithub = ()=>{
     }, async(accessToken, refreshToken, profile, done)=>{
         console.log('profile', profile)
         try {
+            let email = profile._json.email
            let user= await userModel.findOne({email: profile._json.email})
            if(!user){
             let newUser= {

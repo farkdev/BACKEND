@@ -23,11 +23,24 @@ const userSchema = new Schema({
         type: Date,
         required: true
     },
+    role: {
+        type: String,
+        default: 'user'
+    },
     password: {
+        type: String,
+        required: true
+    },
+    cart: {
         type: String,
         required: true
     }
 })
+
+
+
+
+
 userSchema.plugin(mongoosePaginate)
 const userModel = model(collection, userSchema)
 

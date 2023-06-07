@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken')
 
-const JWT_PRIVATE_KEY = 'JWTSecreto'
-
+const configServer = require('../config/objectConfig')
 
 const generateToken = (user) =>{
-    const token = jwt.sign({user}, JWT_PRIVATE_KEY, {expiresIn: '1D'})
+    const token = jwt.sign({user}, configServer.JWT_PRIVATE_KEY, {expiresIn: '1d'})
     return token
 }
 
@@ -17,7 +16,7 @@ const authToken = (req, res, next) =>{
     }
     const token = authHeader.split('')[1]
 
-    jwt.verify(token, JWT_PRIVATE_KEY, (error, credential)=>{
+    jwt.verify(token, configServer.JWT_PRIVATE_KEY, (error, credential)=>{
         if(error) return res.status(403).send({
             status: error, 
             error: "No estas autorizado"

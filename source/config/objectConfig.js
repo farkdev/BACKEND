@@ -5,7 +5,9 @@ const { productModel } = require('../dao/models/products.model')
 let url = 'mongodb+srv://farkdev:coderhouse@cluster0.p2tsobu.mongodb.net/Store'
 
 module.exports = {
+    jwt_private_key : 'JWTSecreto',
     connectDB: async ()=>{
+        
         console.log("base de datos conectada")
         connect(url)
        

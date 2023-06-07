@@ -12,7 +12,7 @@ const cookie = require('./routes/prueba.router')
 const MongoStore = require('connect-mongo')
 const { initPassportMid, initPassportGithub } = require('./config/passport.config')
 const passport = require('passport')
-
+const  {initializePassport}  = require('../source/config/passportJWT')
 
 //___________________________________________________________________________
 messages = []
@@ -62,7 +62,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 objectConfig.connectDB()
 
-
+initializePassport()
 // initPassportMid()
 initPassportGithub()
 passport.use(passport.initialize())
@@ -112,10 +112,6 @@ app.post('/single', uploader.single('myfile'), (req, res)=>{
 })
 
 
-// app.use( (request, response, next)=>{
-//     console.log("mid a nivel aplicación: time", Date.now())
-//     next()
-// })
 
 
 

@@ -54,6 +54,19 @@ class productController {
                 res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
             });
     }
+    async createProd (req, res){
+        try{
+            const product = req.body
+            const newProduct = await productService.addProduct(product)
+            Object.keys(newProduct).length === 0
+            ? res.status(400).send({ error: "No se pudo agregar el producto" })
+            : res.status(201).send({status:'producto agregado', payload: newProduct})
+        } catch(err){
+            console.log(err)
+        }
+    }
+
+
 
     async updProduct(req, res) {
         try {

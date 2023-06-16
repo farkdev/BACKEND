@@ -7,24 +7,24 @@ const productsManager = new ProductManagerMongo;
 
 
 
-// router.get('/', productController.getProducts())
+
 
 
 //vista inicial de productos
-router.get('/', async (req, res) => {
-  try {
-    const result = await productsManager.getProductsM();
-    let user = req.session.user
-    res.render('home', {
-      title: "Lista de Productos",
-      payload: result,
-      user
-    });
-  } catch (err) {
-    console.log(err);
-    res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
-  }
-});
+// router.get('/', async (req, res) => {
+//   try {
+//     const result = await productsManager.getProductsM();
+//     let user = req.session.user
+//     res.render('home', {
+//       title: "Lista de Productos",
+//       payload: result,
+//       user
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
+//   }
+// });
 
 
 //productos para agregar a carrito

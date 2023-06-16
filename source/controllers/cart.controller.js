@@ -16,11 +16,7 @@ class cartController {
     getCars = async (req, res)=>{
         try{
             const carts = await cartService.getCarts()
-<<<<<<< HEAD
             res.status(200).send({
-=======
-        res.status(200).send({
->>>>>>> a55609c84fd3fce792dcac840363902dcb91cb6b
             status: 'success',
             payload: carts
         })

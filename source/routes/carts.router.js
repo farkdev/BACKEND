@@ -21,6 +21,14 @@ router.put('/:cid/product/:pid', cartController.cartProdUpd)
 router.delete('/:cid/product/:pid', cartController.cartDelProd)
 //BORRA CARRITO
 router.delete('/:cid', cartController.cartDelete)
+<<<<<<< HEAD
+=======
+
+
+
+
+
+>>>>>>> a55609c84fd3fce792dcac840363902dcb91cb6b
 
 
 

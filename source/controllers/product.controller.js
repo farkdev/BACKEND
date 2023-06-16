@@ -2,19 +2,19 @@ const { productService } = require("../service");
 
 class productController {
     getProducts(req, res) {
-    productService.getProductsM()
-        .then(result => {
-            let user = req.session.user;
-            res.render('home', {
-                title: "Lista de Productos",
-                payload: result,
-                user
+        productService.getProductsM()
+            .then(result => {
+                let user = req.session.user;
+                res.render('home', {
+                    title: "Lista de Productos",
+                    payload: result,
+                    user
+                });
+            })
+            .catch(err => {
+                console.log(err);
+                res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
             });
-        })
-        .catch(err => {
-            console.log(err);
-            res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
-        });
     }
 
     getById(req, res) {
@@ -31,31 +31,29 @@ class productController {
         }
 
         productService.getProductById(pid, { limit, page, sortOptions })
-        .then(result => {
-            const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
-            const prevLink = hasPrevPage ? `/products/${pid}?page=${prevPage}&limit=${limit}&sort=${sort}` : null;
-            const nextLink = hasNextPage ? `/products/${pid}?page=${nextPage}&limit=${limit}&sort=${sort}` : null;
+            .then(result => {
+                const { docs, totalPages, prevPage, nextPage, hasPrevPage, hasNextPage } = result;
+                const prevLink = hasPrevPage ? `/products/${pid}?page=${prevPage}&limit=${limit}&sort=${sort}` : null;
+                const nextLink = hasNextPage ? `/products/${pid}?page=${nextPage}&limit=${limit}&sort=${sort}` : null;
 
-            res.render('products', {
-                status: 'success',
-                payload: docs,
-                totalPages,
-                prevPage,
-                nextPage,
-                page,
-                hasPrevPage,
-                hasNextPage,
-                prevLink,
-                nextLink
-            });
+                res.render('products', {
+                    status: 'success',
+                    payload: docs,
+                    totalPages,
+                    prevPage,
+                    nextPage,
+                    page,
+                    hasPrevPage,
+                    hasNextPage,
+                    prevLink,
+                    nextLink
+                });
             })
-        .catch(err => {
-            console.log(err);
-            res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
-        });
+            .catch(err => {
+                console.log(err);
+                res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
+            });
     }
-
-    
     async createProd (req, res){
         try{
             const product = req.body

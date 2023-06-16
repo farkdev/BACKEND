@@ -1,118 +1,26 @@
 const { Router } = require('express')
 const CartManagerMongo = require('../dao/cart.mongo');
+const cartController = require('../controllers/cart.controller');
 
 
 const router = Router()
 const cartManager = new CartManagerMongo
 
+
 // crea carrito
-router.post('/cart', async(req, res)=>{
-    try{
-        const newCart = {products:[]}
-        await cartManager.addCart(newCart)
-        res.status(201).send({ message: 'Carrito creado correctamente'})
-    }catch(err){
-        console.log(err)
-    }
-});
-
-
+router.post('/cart', cartController.createCart);
 //GET CARRITOS
-router.get('/', async(req, res) => {
-  try {
-      const carts = await cartManager.getCarts()
-      res.status(200).send({
-          status: 'success',
-          payload: carts
-      })
-  }catch(error){
-      return new Error(error)
-  }
-})
-
-
+router.get('/', cartController.getCars)
 //CARRITOS POR ID
-router.get('/:cid', async(req, res) => {
-    try {
-        const cid = req.params.cid
-        const cart = await cartManager.getCartById(cid)
-        res.status(200).send({
-            status: 'success',
-            payload: cart
-        })
-    }catch(error){
-        return new Error(error)
-    }
-})
-
+router.get('/:cid', cartController.getCartByID)
 //PRODUCTOS DEL CARRITO
-router.post('/:cid/product/:pid', async(req, res) =>{
-    try{
-        const cid = req.params.cid
-        const pid = req.params.pid
-        let cart = await cartManager.getCartById(cid)
-        if (cart !== null) {
-            let result = await cartManager.updateCart(cid, pid)
-            res.status(200).send({
-                status: 'success',
-                payload: result})
-        }else{
-            res.status(400).send({
-                status: 'Error',
-                payload: "El carrito no existe"})
-        }
-    } catch(error) {
-        return new Error(error)
-    }
-})
-
+router.post('/:cid/product/:pid', cartController.cartProducts)
 //PUT MODIFICA PRODUCTOS DEL CARRITO
-
-router.put('/:cid/product/:pid', async(req, res) =>{
-    try{
-        const { cid, pid } = req.params
-        const quantity = req.body
-        console.log(quantity)
-        let cart = await cartManager.getCartById(cid)
-        if (cart !== null) {
-            let result = await cartManager.updateCartProduct(cid, pid, quantity)
-            res.status(200).send({
-                status: 'success',
-                payload: result})
-            }
-    } catch(error) {
-        return new Error(error)
-    }
-})
-
+router.put('/:cid/product/:pid', cartController.cartProdUpd)
 //DELETE PRODUCTOS DEL CART
-router.delete('/:cid/product/:pid', async(req, res) =>{
-    try {   
-        const cid = req.params.cid
-        const pid = req.params.pid
-        await cartManager.deleteCartByID(cid, pid)
-        res.send({
-            status: 'success',
-            payload: `Producto id: ${pid} fue eliminado del carrito: ${cid}`
-        })
-    } catch (error) {
-        return new Error(error)
-    }
-})
-
+router.delete('/:cid/product/:pid', cartController.cartDelProd)
 //BORRA CARRITO
-router.delete('/:cid', async(req, res) =>{
-    try {   
-        const { cid } = req.params
-        await cartManager.deleteCart({cid})
-        res.send({
-            status: 'success',
-            payload: `Carrito id: ${cid} fue eliminado`
-        })
-    } catch (error) {
-        return new Error(error)
-    }
-})
+router.delete('/:cid', cartController.cartDelete)
 
 
 

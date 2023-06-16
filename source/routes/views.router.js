@@ -4,23 +4,31 @@ const { productModel } = require('../dao/models/products.model')
 const ProductManagerMongo = require('../dao/product.mongo')
 const productsManager = new ProductManagerMongo;
 
-router.get('/', async (req, res) => {
-  try {
-    const result = await productsManager.getProductsM();
-    let user = req.session.user
-    res.render('home', {
-      title: "Lista de Productos",
-      payload: result,
-      user
-    });
-  } catch (err) {
-    console.log(err);
-    res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
-  }
-});
 
 
 
+
+
+
+//vista inicial de productos
+
+// router.get('/', async (req, res) => {
+//   try {
+//     const result = await productsManager.getProductsM();
+//     let user = req.session.user
+//     res.render('home', {
+//       title: "Lista de Productos",
+//       payload: result,
+//       user
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
+//   }
+// });
+
+
+//VISTA PRODUCTOS PARA AGREGAR A CARRITO
 router.get('/products', async(req,res)=>{
   try{
       const {limit = 4}= req.query

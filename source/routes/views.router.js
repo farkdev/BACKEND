@@ -1,9 +1,16 @@
 const { Router } = require('express')
 const router = Router()
 const { productModel } = require('../dao/models/products.model')
-const ProductManagerMongo = require('../dao/product.mongo')
+const ProductManagerMongo = require('../dao/product.mongo');
+const productController = require('../controllers/product.controller');
 const productsManager = new ProductManagerMongo;
 
+
+
+// router.get('/', productController.getProducts())
+
+
+//vista inicial de productos
 router.get('/', async (req, res) => {
   try {
     const result = await productsManager.getProductsM();
@@ -20,7 +27,7 @@ router.get('/', async (req, res) => {
 });
 
 
-
+//productos para agregar a carrito
 router.get('/products', async(req,res)=>{
   try{
       const {limit = 4}= req.query
@@ -104,7 +111,7 @@ router.get('/products', async(req,res)=>{
 
 router.get('/realtimeproducts', async(req, res) =>{
     
-  const prodList =  await productos.getProducts()
+  const prodList =  await productsManager.getProducts()
 
   let datosProd = {
       listaProductosReal: prodList

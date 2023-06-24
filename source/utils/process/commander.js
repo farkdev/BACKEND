@@ -23,10 +23,9 @@ process.on('exit', code => {
     console.log('se ejecuta justo antes de terminar el processo', code)
 })
 process.on('uncaughtException', exception => {
-    console.log('se ejecuta justo con alguna exception')
+    console.log('se ejecuta justo con alguna excepcion')
 })
 process.on('message', message => {
-    console.log('muestra el mensaje de otro processo')
+    console.log('muestra el mensaje de otro proceso')
 })
 
-console()

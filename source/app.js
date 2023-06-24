@@ -20,10 +20,10 @@ const messageManager = require('../source/dao/chat.mongo')
 
 const { Server } = require('socket.io')
 
-
-const httpServer = app.listen(8080, ()=>{
-    console.log("servidor funcionando!")
-})
+const port = program.port || 8080;
+const httpServer = app.listen(port, () => {
+    console.log("Servidor funcionando en el puerto", port);
+});
 
 const socketServer = new Server(httpServer)
 

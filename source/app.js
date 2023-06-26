@@ -5,7 +5,7 @@ const handlebars = require('express-handlebars')
 const {uploader} = require('./utils/multer')
 const {socketProducts} = require ('./public/js/socketProducts')
 const app = express()
-const objectConfig = require('../source/config/objectConfig')
+const objectConfig  = require('./config/objectConfig')
 const routerServer = require('../source/routes/index.router')
 const session = require('express-session')
 const cookie = require('./routes/prueba.router')
@@ -20,7 +20,7 @@ const messageManager = require('../source/dao/chat.mongo')
 
 const { Server } = require('socket.io')
 
-const port = program.port || 8080;
+const port =  8080;
 const httpServer = app.listen(port, () => {
     console.log("Servidor funcionando en el puerto", port);
 });
@@ -55,11 +55,14 @@ app.get('/chat', (req, res)=>{
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname+'/views')
 app.set('view engine', 'handlebars')
+
+
 app.use('/static' , express.static(__dirname+'/public'))
-console.log(__dirname+'/public')
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
+
 app.use(cookieParser())
+
 objectConfig.connectDB()
 
 initializePassport()

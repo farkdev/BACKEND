@@ -43,7 +43,7 @@ class SessionController {
         res.cookie('coderCookieToken', token, {
             maxAge: 60*60*100,
             httpOnly: true,
-        }).res.redirect('/')
+        }).res.redirect('/login')
     }
 
     register = async (req, res)=>{
@@ -94,7 +94,7 @@ class SessionController {
         if(err){
             res.send({status: 'error', error: err})
         }
-        res.redirect('login')
+        res.redirect('/login')
     })
     }
 }

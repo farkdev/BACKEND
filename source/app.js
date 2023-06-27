@@ -16,13 +16,13 @@ const  {initializePassport}  = require('../source/config/passportJWT')
 
 //___________________________________________________________________________
 messages = []
-const messageManager = require('../source/dao/chat.mongo')
+const messageManager = require('./dao/mongo/chat.mongo')
 
 const { Server } = require('socket.io')
 
-const port =  8080;
+const port =  process.env.PORT || 8080;
 const httpServer = app.listen(port, () => {
-    console.log("Servidor funcionando en el puerto", port);
+    console.log("Servidor funcionando en el puerto: ",port);
 });
 
 const socketServer = new Server(httpServer)

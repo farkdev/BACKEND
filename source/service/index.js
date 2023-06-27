@@ -1,9 +1,9 @@
 
 //se traen las instancias de los DAOS
 
-const CartManagerMongo = require("../dao/cart.mongo");
-const productMongo = require("../dao/product.mongo");
-const userDaoMongo = require("../dao/user.mongo");
+const CartManagerMongo = require("../dao/mongo/cart.mongo");
+const productMongo = require("../dao/mongo/product.mongo");
+const userDaoMongo = require("../dao/mongo/user.mongo");
 
 
 

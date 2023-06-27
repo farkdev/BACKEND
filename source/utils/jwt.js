@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken')
 
 const configServer = require('../config/objectConfig')
-
+const dotenv = require('dotenv')
 const generateToken = (user) =>{
-    const token = jwt.sign({user}, configServer.JWT_PRIVATE_KEY, {expiresIn: '1d'})
+    const token = jwt.sign({user}, process.env.JWT_SECRET_KEY, {expiresIn: '1d'})
     return token
 }
 

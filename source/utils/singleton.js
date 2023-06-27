@@ -1,24 +1,23 @@
-const mongoose = require('mongoose')
-require('dotenv').config()
+const {connect} = require('mongoose')
 
 
 
 
-class MongoSingleton{
+class MongoSingleton {
     static #instance
     constructor(){
-        mongoose.connect(process.env.MONGO_URL,{
+        connect(process.env.MONGO_URL,{
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
     }
     static getInstance(){
-        if(this.#instance){
-            console.log('base de datos creada')
+        if (this.#instance){
+            console.log('Conexión ya establecida')
             return this.#instance
         }
         this.#instance =  new MongoSingleton()
-        console.log('base de datos conectada')
+        console.log('Conexión a DB realizada')
         return this.#instance
     }
 }

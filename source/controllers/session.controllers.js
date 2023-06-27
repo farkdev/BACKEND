@@ -1,9 +1,11 @@
-
-const CartManagerMongo = require("../dao/cart.mongo")
-const { userModel } = require("../dao/models/user.model")
+const { cartService } = require("../service/index")
+const { userModel } = require("../dao/mongo/models/user.model")
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
 const { generateToken } = require("../utils/jwt")
-const cartM = new CartManagerMongo
+
+
+const { userService  }= require('../service/index') 
+
 
 class SessionController {
 
@@ -16,7 +18,7 @@ class SessionController {
         }
         
         
-        const userDB = await userModel.findOne({email})
+        const userDB = await userService.getUser({email})
         if(!userDB) return res.status(404).json({status: "error", message: "Usuario o contraseña incorrecto"})
         
         if(!isValidPassword(password, userDB)) return res.status(401).send({status: "error", message: "el usuario o contraseña no es correcta"})
@@ -43,18 +45,19 @@ class SessionController {
         res.cookie('coderCookieToken', token, {
             maxAge: 60*60*100,
             httpOnly: true,
-        }).res.redirect('/login')
+        })
+        res.redirect('/login')
     }
 
     register = async (req, res)=>{
     
         const {first_name, last_name, email, date_of_birth, password }  = req.body
-        const existUser = await userModel.findOne({email})
+        const existUser = await userService.findOne({email})
         if(existUser){ 
             return res.send({status:'error', mensaje: "El email ya se encuentra registrado"})
         }
         const newCart = {products: []}
-        const cart = await cartM.addCart(newCart)
+        const cart = await cartService.createCart(newCart)
 
         let role = userModel.schema.path('role').default()
     
@@ -72,7 +75,7 @@ class SessionController {
             password: createHash(password),
             title: "Register"
         } 
-        await userModel.create(newUser) 
+        await userService.create(newUser) 
 
         const accesTok = generateToken({
             first_name: newUser.first_name,

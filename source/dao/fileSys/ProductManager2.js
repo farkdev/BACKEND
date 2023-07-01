@@ -104,7 +104,7 @@ class ProductManager {
 } 
 
 
-const admin = new ProductManager
+// const admin = new ProductManager
 // admin.addProduct("Pelota de tenis", "Pelota profesional de tenis, 3 unidades", 1900, "sin ruta", 936, 35)
 // admin.addProduct("Raqueta Wilson", "Raqueta Wilson N Code 95", 47000, "sin ruta", 134, 10)
 // admin.addProduct("Bolso Head", "Bolso Raquetero x3", 24000, "sin ruta", 422, 10)

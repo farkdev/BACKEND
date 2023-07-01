@@ -5,7 +5,7 @@ const { productModel } = require("./models/products.model")
 
 class ProductManagerMongo {
     
-    async getProductsM (){
+    async getProducts (){
         try {
             return await productModel.find({}).lean()
         }catch (err){

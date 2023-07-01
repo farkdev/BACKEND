@@ -1,13 +1,16 @@
 const { CartModel } = require('./models/cart.model')
-
+const { ticketModel } = require('./models/ticketModel')
 
 
 class CartManagerMongo {
+    constructor(){
+        this.cartModel= CartModel
+    
+    }
 
-
-     async getCarts (){
+    async getCarts (){
         try{
-            return await CartModel.find({})
+            return await this.cartModel.find({})
         }catch (err){
             return new Error(err)
         }
@@ -16,69 +19,95 @@ class CartManagerMongo {
 
     async getCartById(cid){
         try{
-            return await CartModel.findOne({_id: cid}).lean();
+            return await this.cartModel.findOne({_id: cid}).lean();
         } catch (err){
             return new Error (err)
         }
     }
 
 
-    async addCart(newCart){
+    async createCart(newCart){
         try{
-            return await CartModel.create(newCart)
+            return await this.cartModel.create(newCart)
         } catch (err){
             return new Error (err)
         }
     }
 
-
-    async updateCart(cid, pid){
+    async addToCart(cid, pid, quantity) {
         try {
-            const cart = await CartModel.findOne({_id: cid, "products.productID": pid})
-            //console.log(`carrito: ${cart}`)
+            const cart = await this.cartModel.findOne({_id: cid, "products.productID": pid});
+    
             if (cart !== null) {
-                return await CartModel.updateOne({_id: cid, "products.productID": pid}, {$inc: { "products.$.quantity": 1}})          
-            }else{
-                return await CartModel.updateOne({_id: cid}, {$push: { products: {productID: pid, quantity: 1}}})
+                await this.cartModel.updateOne({_id: cid, "products.productID": pid}, {$inc: { "products.$.quantity": 1}});
+                return await this.cartModel.findOneAndUpdate({_id: cid, "products.productID": pid}, {$set: { "products.$.quantity": quantity}});
+            } else {
+                return await this.cartModel.updateOne({_id: cid}, {$push: { products: {productID: pid, quantity: quantity}}});
             }
         } catch (error) {
-            return new Error(error)
+            return new Error(error);
         }
     }
 
-    async updateCartProduct(cid, pid, quantity){
-        try {
-            const cart = await CartModel.findOne({_id: cid, "products.productID": pid})
+
+    //SIMPLIFICO CODIGO--------------------------------------------------------------
+    // async addToCart(cid, pid){
+    //     try {
+    //         const cart = await cartModel.findOne({_id: cid, "products.productID": pid})
+    //         //console.log(`carrito: ${cart}`)
+    //         if (cart !== null) {
+    //             return await cartModel.updateOne({_id: cid, "products.productID": pid}, {$inc: { "products.$.quantity": 1}})          
+    //         }else{
+    //             return await cartModel.updateOne({_id: cid}, {$push: { products: {productID: pid, quantity: 1}}})
+    //         }
+    //     } catch (error) {
+    //         return new Error(error)
+    //     }
+    // }
+
+    // async updateCartProduct(cid, pid, quantity){
+    //     try {
+    //         const cart = await cartModel.findOne({_id: cid, "products.productID": pid})
             
-            if (cart !== null) {
+    //         if (cart !== null) {
                 
-                return await CartModel.findOneAndUpdate({_id: cid, "products.productID": pid}, {$set: { "products.$.quantity": quantity}})
-            }
+    //             return await cartModel.findOneAndUpdate({_id: cid, "products.productID": pid}, {$set: { "products.$.quantity": quantity}})
+    //         }
+    //     } catch (error) {
+    //         return new Error(error)
+    //     }
+    // }
+    //SIMPLIFICO CODIGO--------------------------------------------------------------
+
+
+
+    //MODIFICA CANTIDAD DE  1  PROD DEL CART
+    async modifyProdFromCart(cid, pid, quantity){
+        try{
+            return await this.cartModel.findOneAndUpdate(
+                {_id: cid, 'products.product':pid},
+                {$set: {"products.$.quantity": quantity}},
+                {new:true}
+            )
+        } catch (error){
+            console.log(error)
+        }
+    }   
+
+
+    
+    //ELIMINA UN PRODUCTO DEL CARRITO
+    async removeProductFromCart(cid, pid){
+        try {
+            return await cartModel.findOneAndDelete({_id: cid}, {$pull: {products: {productID: pid}}},{new: true});
         } catch (error) {
             return new Error(error)
         }
     }
-
-
-    async deleteCart(cid){
-        try {
-            return await CartModel.deleteOne({_id: cid})
-        } catch (err){
-            return new Error(err)
-        }
-    }
-
-    async deleteCartByID(cid, pid){
-        try {
-            return await CartModel.findOneAndDelete({_id: cid}, {$pull: {products: {productID: pid}}},{new: true});
-        } catch (error) {
-            return new Error(error)
-        }
-    }
-
+    //ELIMINA TODOS LOS PRODUCTOS
     async removeAllProductsFromCart(cid) {
         try {
-          const cart = await CartModel.findById(cid);
+          const cart = await cartModel.findById(cid);
     
           if (!cart) {
             return null; // Carrito no encontrado
@@ -95,6 +124,26 @@ class CartManagerMongo {
           throw new Error(err);
         }
     }
+
+
+    async deleteCart(cid){
+        try {
+            return await cartModel.deleteOne({_id: cid})
+        } catch (err){
+            return new Error(err)
+        }
+    }
+
+    async generateTicket(newTicket){
+        try{
+            return await ticketModel.create(newTicket)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+
+
 }
 
 

@@ -3,7 +3,7 @@ const fs = require('fs')
 class CartManager {
     constructor(){
         this.cart = []
-        this.path = './cart.json'
+        this.path = './source/cart.json'
         
     }
 
@@ -20,7 +20,7 @@ class CartManager {
         }
     }
     
-    readCart = async() =>{
+    getCarts = async() =>{
         try{
             const data = await fs.promises.readFile(this.path, 'utf-8')
             return JSON.parse(data)
@@ -93,28 +93,57 @@ class CartManager {
         }
     }
 
-    addToCart = async (cid, pid) => {
+    addToCart = async (cid, pid, quantity) => {
         try {
-            if(this.exists(this.path)) {
-                const carts = await this.readCart()
-                const cart = carts.find(item => item.id === cid)
-                if(cart) {
-                    const addProduct = cart.products.find(item => item.id === pid)
-                    if(addProduct) {
-                    addProduct.quantity++
+            if (this.exists(this.path)) {
+                const carts = await this.readCart();
+                const cart = carts.find(item => item.id === cid);
+                if (cart) {
+                    const addProduct = cart.products.find(item => item.id === pid);
+                    if (addProduct) {
+                        addProduct.quantity += quantity;
                     } else {
-                        cart.products.push({id: pid, quantity: 1 })
+                        cart.products.push({id: pid, quantity: quantity});
                     }
-                    await this.writeCart(carts)
-                    this.cart = cart
-                    return this.cart
+                    await this.writeCart(carts);
+                    this.cart = cart;
+                    return this.cart;
                 }
-            throw new Error(`The cart with the id was not found: ${cid}`)
+                throw new Error(`The cart with the id was not found: ${cid}`);
             }
         } catch (error) {
             console.log(error);
         }
-    }
+    };
+    
+
+
+    //SIMPLIFICANDO CODIGO ---------------------------------------------------------------
+    // addToCart = async (cid, pid) => {
+    //     try {
+    //         if(this.exists(this.path)) {
+    //             const carts = await this.readCart()
+    //             const cart = carts.find(item => item.id === cid)
+    //             if(cart) {
+    //                 const addProduct = cart.products.find(item => item.id === pid)
+    //                 if(addProduct) {
+    //                 addProduct.quantity++
+    //                 } else {
+    //                     cart.products.push({id: pid, quantity: 1 })
+    //                 }
+    //                 await this.writeCart(carts)
+    //                 this.cart = cart
+    //                 return this.cart
+    //             }
+    //         throw new Error(`The cart with the id was not found: ${cid}`)
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+    //SIMPLIFICANDO CODIGO ---------------------------------------------------------------
+
+
 
     #idGen(productsArray = []) {
         const id =
@@ -123,6 +152,86 @@ class CartManager {
             : productsArray[productsArray.length - 1].id + 1;
         return id;
     }
+
+    
+
+    modifyProdFromCart = async (cid, pid, quantity) => {
+        try {
+            const carts = await this.readCart();
+            const cart = carts.find(item => item.id === cid);
+            if (cart) {
+                const product = cart.products.find(item => item.id === pid);
+                if (product) {
+                    product.quantity = quantity;
+                    await this.writeCart(carts);
+                    console.log(`Se modifico la cantidad del producto ${pid} en el carrito ${cid}.`);
+                } else {
+                    console.log(`No se encontró el producto ${pid} en el carrito ${cid}.`);
+                }
+            } else {
+                console.log(`No se encontró el carrito ${cid}.`);
+            }
+        } catch (error) {
+            console.log(`Error al modificar el producto en el carrito: ${error.message}`);
+        }
+    };
+    
+
+    removeAllProductsFromCart = async () => {
+        try {
+          if (this.exists()) {
+            this.cart.products = [];
+            await this.writeCart(this.cart);
+            console.log('Se han eliminado todos los productos del carrito.');
+          } else {
+            console.log('No se puede eliminar los productos del carrito porque no existe.');
+          }
+        } catch (error) {
+          console.log(`Error al eliminar los productos del carrito: ${error.message}`);
+        }
+    };
+
+    removeProductFromCart = async (cid, pid) => {
+        try {
+          if (this.exists()) {
+            const cart = await this.getCartById(cid);
+            if (cart) {
+              const index = cart.products.findIndex((item) => item.id === pid);
+              if (index !== -1) {
+                cart.products.splice(index, 1);
+                await this.writeCart(this.cart);
+                console.log(`El producto con ID ${pid} ha sido eliminado del carrito.`);
+              } else {
+                console.log(`No se encontró un producto con ID ${pid} en el carrito.`);
+              }
+            } else {
+              console.log(`No se encontró un carrito con ID ${cid}.`);
+            }
+          } else {
+            console.log('No se puede eliminar un producto del carrito porque el carrito no existe.');
+          }
+        } catch (error) {
+          console.log(`Error al eliminar el producto del carrito: ${error.message}`);
+        }
+    };
+
+    deleteCart = async () => {
+        try {
+          if (this.exists()) {
+            await fs.promises.unlink(this.path);
+            this.cart = [];
+            console.log('El carrito ha sido eliminado por completo.');
+          } else {
+            console.log('No se puede eliminar el carrito porque no existe.');
+          }
+        } catch (error) {
+          console.log(`Error al eliminar el carrito: ${error.message}`);
+        }
+    };
+    
+
+
+
 
 }
 

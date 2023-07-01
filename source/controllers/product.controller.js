@@ -2,7 +2,7 @@ const { productService } = require("../service");
 
 class productController {
     getProducts(req, res) {
-        productService.getProductsM()
+        productService.getProducts()
             .then(result => {
                 let user = req.session.user;
                 res.render('home', {

@@ -14,6 +14,7 @@ dotenv.config({
 
 
 module.exports={
+    persistence: process.env.PERSISTENCE,
     jwt_secret_key: process.env.JWT_SECRET_KEY,
     connectDB: async()=> await MongoSingleton.getInstance()
 }

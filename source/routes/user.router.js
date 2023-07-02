@@ -20,7 +20,7 @@ router.post('/login', sessionControllers.login)
 router.post('/register', sessionControllers.register)
 router.get('/logout', sessionControllers.logout)
 
-router.get('/current', passportCall('current', {session: false}), authorization('user'), (req, res)=>{
+router.get('/current', passportCall('current', {session: false}), (req, res)=>{
     res.send(req.user)
 })
 

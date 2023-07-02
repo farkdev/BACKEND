@@ -81,7 +81,7 @@ class CartManagerMongo {
 
 
 
-    //MODIFICA CANTIDAD DE  1  PROD DEL CART
+    //MODIFICA CANTIDAD DE UN PROD DEL CART
     async modifyProdFromCart(cid, pid, quantity){
         try{
             return await this.cartModel.findOneAndUpdate(

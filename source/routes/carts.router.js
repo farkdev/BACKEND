@@ -1,7 +1,8 @@
 const { Router } = require('express')
 const CartManagerMongo = require('../dao/mongo/cart.mongo');
 const cartController = require('../controllers/cart.controller');
-
+const { passportCall } = require('../config/passportCall')
+const { authorization } = require('../config/passportAuthorization')
 
 const router = Router()
 const cartManager = new CartManagerMongo
@@ -9,20 +10,27 @@ const cartManager = new CartManagerMongo
 
 // crea carrito
 router.post('/cart', cartController.createCart);
+
 //GET CARRITOS
 router.get('/', cartController.getCars)
+
 //CARRITOS POR ID
 router.get('/:cid', cartController.getCartByID)
-//PRODUCTOS DEL CARRITO
-router.post('/:cid/product/:pid', cartController.cartProducts)
+
+//AGREGA PRODUCTOS AL CARRITO
+router.post('/:cid/product/:pid',passportCall('current', {session: false}), authorization('user'), cartController.cartProducts)
+
 //PUT MODIFICA PRODUCTOS DEL CARRITO
 router.put('/:cid/product/:pid', cartController.cartProdUpd)
+
 //DELETE PRODUCTOS DEL CART
 router.delete('/:cid/product/:pid', cartController.cartDelProd)
+
 //BORRA CARRITO
 router.delete('/:cid', cartController.cartDelete)
 
-
+//EMITE TICKET DE COMPRA
+router.post('/:cid/purchase', passportCall('current', {session: false}), authorization('user'),cartController.purchaseCart)
 
 
 // //busca carritos

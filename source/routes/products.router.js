@@ -1,22 +1,26 @@
 const { Router } = require('express')
-const ProductManagerMongo = require('../dao/mongo/product.mongo')
-const { productModel } = require('../dao/mongo/models/products.model');
 const productController = require('../controllers/product.controller');
-
+const { passportCall } = require('../config/passportCall')
+const { authorization } = require('../config/passportAuthorization')
 const router = Router()
-const PManager = new ProductManagerMongo;
+
 
 
 //trae productos
 router.get('/', productController.getProducts);
+
 //TRAE PRODUCTO POR ID
 router.get('/:pid', productController.getById);
+
 //CREA PRODUCTO
-router.post('/' , productController.createProd);
+router.post('/' , passportCall('current', {session:false}), authorization('admin'), productController.createProd);
+
 //ACTUALIZA PRODUCTO
-router.put('/:pid', productController.updProduct);
+router.put('/:pid', passportCall('current', {session:false}), authorization('admin'), productController.updProduct);
+
 //ELIMINA PRODUCTO
-router.delete('/:pid', productController.delete);
+router.delete('/:pid', passportCall('current', {session:false}), authorization('admin'),productController.delete);
+
 
 
 

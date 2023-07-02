@@ -1,20 +1,21 @@
 
-//se traen las instancias de los DAOS
+const { productDao, cartDao } = require("../dao/factory")
 
-const CartManagerMongo = require("../dao/mongo/cart.mongo");
-const productMongo = require("../dao/mongo/product.mongo");
+
 const userDaoMongo = require("../dao/mongo/user.mongo");
-const cartMemory = require('../dao/fileSys/cartManager')
-
-
-
-
+const cartMemory = require('../dao/fileSys/cartManager');
+const ProductRepo = require("../repositories/product.repository");
+const CartRepo = require("../repositories/cart.repository");
 
 // const cartService = new CartManagerMongo()
-const cartService = new cartMemory()
+// const cartService = new cartMemory()
 
-const productService = new productMongo()
 
+
+
+
+const cartService = new CartRepo(new cartDao())
+const productService = new ProductRepo(new productDao())
 const userService = new userDaoMongo()
 
 

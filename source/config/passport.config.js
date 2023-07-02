@@ -1,5 +1,5 @@
-const passport = require('passport')
-const local = require('passport-local')
+const passport      = require('passport')
+const local         = require('passport-local')
 const { userModel } = require('../dao/mongo/models/user.model')
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
 const GithubStrategy = require('passport-github2')

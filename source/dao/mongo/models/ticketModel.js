@@ -1,4 +1,4 @@
-const {Schema, model} = require('mongoose')
+const { Schema, model } = require('mongoose')
 
 const collection = "ticket"
 
@@ -9,15 +9,16 @@ const ticketSchema = new Schema ({
         required: true,
         unique: true
     },
-    purchase_date:{
+    purchase_datetime:{
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     },
     amount: {
         type: Number,
         required: true
     },
-    purchase: {
+    purchaser: {
         type: String,
         required: true
     }

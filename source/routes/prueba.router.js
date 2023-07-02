@@ -1,4 +1,5 @@
 const  {Router} = require('express')
+const { sendMail } = require('../utils/nodemailer')
 const router = Router()
 
 
@@ -17,6 +18,19 @@ router.get('setSignedCookie', (req,res) =>{
 router.get('/deleteCookie', (req, res)=>{
     res.clearCookie("CoderCookie").send('Cookie removed')
 })
+
+
+
+router.get('/pruebas', (req, res)=>{
+  const enviado = sendMail
+  res.send({
+    status: 'Email enviado',
+    payload: enviado})
+})
+
+
+
+
 
 
 router.get('/session', (req, res)=>{

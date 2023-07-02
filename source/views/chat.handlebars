@@ -1,16 +1,19 @@
-<div>
-    <h1>Socket.chat</h1>
 
-    <form id="messageForm">
-        <input type="text" name="chatbox" id="chatbox" placeholder="Escribe tu mensaje">
-        <button type="submit">Enviar</button>
-    </form>
-    <div id="messageLogs">
+<div class="m-5">
+    <h2 class="text-center pt-2 bg-warning my-0 mx-5 rounded-top">Chat</h2>
 
+    <div class="bg-dark h-100 rounded-bottom mx-5 d-flex flex-column">
+        <div class="h-75 overflow-auto">
+            <ul class="text-white px-5 pt-4" id="messageLogs">
+
+            </ul>
+        </div>
+        <div class="px-5">
+            <input class="w-100 rounded bg-light" type="text" name="chatbox" id="chatbox">
+        </div>
     </div>
-
+        
 </div>
-
 
 
 

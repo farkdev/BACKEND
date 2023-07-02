@@ -7,7 +7,7 @@ class cartController {
     createCart = async(req, res)=>{
         try{
             const newCart = {products:[]}
-            await cartService.addCart(newCart)
+            await cartService.createCart(newCart)
             res.status(201).send({ message: 'Carrito creado correctamente'})
         }catch(err){
             console.log(err)

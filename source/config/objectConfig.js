@@ -1,4 +1,4 @@
-const {MongoSingleton} = require('../utils/singleton')
+const { MongoSingleton } = require('../utils/singleton')
 const dotenv           = require('dotenv')
 const { program }      = require('../utils/process/commander')
 const { mode }         = program.opts

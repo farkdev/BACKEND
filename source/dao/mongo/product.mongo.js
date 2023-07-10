@@ -1,13 +1,16 @@
-const { productModel } = require("./models/products.model")
+const  productModel  = require("./models/products.model")
 
 
 
 
 class ProductManagerMongo {
-    
+    constructor(){
+        this.productModel = productModel
+    }
+
     async getProducts (){
         try {
-            return await productModel.find({}).lean()
+            return await this.productModel.find({}).lean()
         }catch (err){
             return new Error(err)
         }
@@ -15,16 +18,16 @@ class ProductManagerMongo {
 
     async getProductById(pid){
         try {
-            return await productModel.findOne({_id: pid})
+            return await this.productModel.findOne({_id: pid})
         } catch (error){
-            return new Error(error)
+            throw new Error('ha ocurrido un error buscando el producto');
         }
     }
     
 
     async addProduct(newProduct){
         try {
-            return await productModel.create(newProduct)
+            return await this.productModel.create(newProduct)
         } catch (err) {
             return new Error(err)
         }
@@ -32,7 +35,7 @@ class ProductManagerMongo {
 
     async updateProduct(pid, updatedProduct){
         try {
-            return await productModel.findByIdAndUpdate(pid, updatedProduct, { new: true })
+            return await this.productModel.findByIdAndUpdate(pid, updatedProduct, { new: true })
         } catch (err) {
             return new Error(err)
         }
@@ -40,7 +43,7 @@ class ProductManagerMongo {
 
     async deleteProduct(pid){
         try {
-            return await productModel.findByIdAndDelete(pid)
+            return await this.productModel.findByIdAndDelete(pid)
         } catch (err) {
             return new Error(err)
         }

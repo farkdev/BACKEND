@@ -8,7 +8,6 @@ switch (config.persistence) {
         config.connectDB()
         const productDaoMongo = require('../dao/mongo/product.mongo')
         const cartDaoMongo = require('../dao/mongo/cart.mongo')
-
         cartDao = cartDaoMongo
         productDao = productDaoMongo
 
@@ -23,6 +22,9 @@ switch (config.persistence) {
         productDao = productFile
 
         break 
+
+//     default:
+//         break
 }
 
 

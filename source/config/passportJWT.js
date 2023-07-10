@@ -1,11 +1,12 @@
 const passport = require('passport')
-const passportJWT = require('passport-jwt')
+const { Strategy, ExtractJwt} = require('passport-jwt')
 const configServer = require('../config/objectConfig')
-require('dotenv').config()
-const JWTStrategy = passportJWT.Strategy
-const ExtractJWT = passportJWT.ExtractJwt
 
-const cookieExtractor = (req) =>{
+require('dotenv').config()
+const JWTStrategy = Strategy
+const ExtractJWT = ExtractJwt
+
+const cookieExtractor = req =>{
     let token = null
     if (req && req.cookies){
         token = req.cookies['coderCookieToken']

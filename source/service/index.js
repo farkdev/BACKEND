@@ -1,11 +1,11 @@
 
-const { productDao, cartDao } = require("../dao/factory")
+const {productDao, cartDao } = require("../dao/factory")
 
 
 const userDaoMongo = require("../dao/mongo/user.mongo");
 const cartMemory = require('../dao/fileSys/cartManager');
-const ProductRepo = require("../repositories/product.repository");
-const CartRepo = require("../repositories/cart.repository");
+const ProductRepository = require("../repositories/product.repository");
+const CartRepository = require("../repositories/cart.repository");
 
 // const cartService = new CartManagerMongo()
 // const cartService = new cartMemory()
@@ -14,8 +14,8 @@ const CartRepo = require("../repositories/cart.repository");
 
 
 
-const cartService = new CartRepo(new cartDao())
-const productService = new ProductRepo(new productDao())
+const cartService = new CartRepository(new cartDao())
+const productService = new ProductRepository(new productDao())
 const userService = new userDaoMongo()
 
 

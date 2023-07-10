@@ -14,7 +14,7 @@
       <div>
       <button class="btn btn-warning mx-2"><a href="/login" class="text-decoration-none text-dark">Log In</a></button>
       </div>
-    {{/if}}
+      {{/if}}
 
   </div>
 

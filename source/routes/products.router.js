@@ -10,7 +10,7 @@ const router = Router()
 router.get('/', productController.getProducts);
 
 //TRAE PRODUCTO POR ID
-router.get('/:pid', productController.getById);
+router.get('/:pid', productController.getProductById);
 
 //CREA PRODUCTO
 router.post('/' , passportCall('current', {session:false}), authorization('admin'), productController.createProd);
@@ -22,7 +22,7 @@ router.put('/:pid', passportCall('current', {session:false}), authorization('adm
 router.delete('/:pid', passportCall('current', {session:false}), authorization('admin'),productController.delete);
 
 
-
+router.get('/mockinproducts', productController.generateProductsMock)
 
 
 

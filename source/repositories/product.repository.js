@@ -8,7 +8,7 @@ class ProductRepo {
     }
 
     getProductById(pid){
-        return this.dao.getProductById
+        return this.dao.getProductById(pid)
     }
 
     createProduct(newProduct){

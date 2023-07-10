@@ -15,7 +15,7 @@ class cartController {
     }
 
 
-    getCars = async (req, res)=>{
+    getCarts = async (req, res)=>{
         try{
             const carts = await cartService.getCarts()
             res.status(200).send({
@@ -29,35 +29,32 @@ class cartController {
 
     getCartByID = async (req, res)=>{
         try{
-            const cid = req.params.cid
-            const cart = await cartService.getCartById(cid)
-            res.status(200).send({
-            status: 'success',
-            payload: cart
-        })
-        }catch(error){
-            return new Error(error)
+            const cid = req.params.cid;
+            const cart = await cartService.getCartById(cid);
+            if(!cart){
+                res.status(404).send({ message: `El carrito con ID ${cid} no existe` })
+            }
+            res.status(201).send({status: 'success', payload: cart})
+        } catch(err){
+            console.log(err)
         }
     }
 
 
-    cartProducts = async(req, res) =>{
+    addToCart = async(req, res) =>{
         try{
             const cid = req.params.cid
             const pid = req.params.pid
-            let cart = await cartService.getCartById(cid)
-            if (cart !== null) {
-                let result = await cartService.addToCart(cid, pid)
-                res.status(200).send({
-                    status: 'success',
-                    payload: result})
-            }else{
-                res.status(400).send({
-                    status: 'Error',
-                    payload: "El carrito no existe"})
+            const { quantity }= req.body
+            
+            const addProduct= await cartService.addToCart(cid, pid, quantity)
+            if( !addProduct ){
+                res.status(400).send({message:'No se agrego el producto'})
             }
-        } catch(error) {
-            return new Error(error)
+    
+            res.status(201).send({message:'success', payload: addProduct})
+        }catch(err){
+            console.log(err)
         }
     }
 
@@ -108,22 +105,25 @@ class cartController {
 
     purchaseCart = async (req, res) => {
         try {
-            const cid = req.params
+            const cid = req.params.cid
             //busco carrito por ID
             const cart = await cartService.getCartById(cid)
             
-
-
             if(!cart){
                 res.status(404).send({message: "No se encontro el carrito"})
             }
             const prodSinStock = []
             //VERIFICO STOCK DEL PROD
             for (const item of cart.products) {
-                const product = await productService.getProductById(item.product._id)
+                const product = await productService.getProductById(item.product.pid)
                 if (product && product.stock >= item.quantity){
-                    item.product.stock -= item.quantity
-                    await productService.updateProduct(item.product._id, product)
+                    cart.products.push({
+                        product: product,
+                        quantity: item.quantity,
+                    })
+                
+                    product.stock -= item.quantity
+                    await productService.updateProduct(item.product.pid, product)
                 } else {
                     prodSinStock.push(item)
                 } 

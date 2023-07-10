@@ -13,6 +13,14 @@ const MongoStore = require('connect-mongo')
 const { initPassportMid, initPassportGithub } = require('./config/passport.config')
 const passport = require('passport')
 const  {initializePassport}  = require('../source/config/passportJWT')
+const { errorHandler } = require('./middlewares/err.middleware')
+
+const port =  process.env.PORT;
+
+
+
+
+
 
 //___________________________________________________________________________
 messages = []
@@ -20,7 +28,8 @@ const messageManager = require('./dao/mongo/chat.mongo')
 
 const { Server } = require('socket.io')
 
-const port =  process.env.PORT || 8080;
+
+
 const httpServer = app.listen(port, () => {
     console.log("Servidor funcionando en el puerto: ",port);
 });
@@ -102,7 +111,7 @@ app.use(session({
 
 app.use(cookie)
 app.use(routerServer)
-
+app.use(errorHandler)
 
 
 

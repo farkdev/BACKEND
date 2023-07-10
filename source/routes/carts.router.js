@@ -12,14 +12,14 @@ const cartManager = new CartManagerMongo
 router.post('/cart', cartController.createCart);
 
 //GET CARRITOS
-router.get('/', cartController.getCars)
+router.get('/', cartController.getCarts)
 
 //CARRITOS POR ID
 router.get('/:cid', cartController.getCartByID)
 
 //AGREGA PRODUCTOS AL CARRITO
-router.post('/:cid/product/:pid',passportCall('current', {session: false}), authorization('user'), cartController.cartProducts)
-
+router.post('/:cid/product/:pid',  cartController.addToCart)
+// passportCall('current', {session: false}), authorization('user'),
 //PUT MODIFICA PRODUCTOS DEL CARRITO
 router.put('/:cid/product/:pid', cartController.cartProdUpd)
 

@@ -4,7 +4,7 @@ const { passportCall } = require('../config/passportCall')
 const { authorization } = require('../config/passportAuthorization')
 const router = Router()
 
-
+router.get('/mockinproducts', productController.generateProductsMock)
 
 //trae productos
 router.get('/', productController.getProducts);
@@ -22,7 +22,7 @@ router.put('/:pid', passportCall('current', {session:false}), authorization('adm
 router.delete('/:pid', passportCall('current', {session:false}), authorization('admin'),productController.delete);
 
 
-router.get('/mockinproducts', productController.generateProductsMock)
+
 
 
 

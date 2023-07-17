@@ -1,4 +1,5 @@
-const  productModel  = require("./models/products.model")
+const { logger } = require("../../config/logger")
+const  {productModel}  = require("./models/products.model")
 
 
 
@@ -20,7 +21,7 @@ class ProductManagerMongo {
         try {
             return await this.productModel.findOne({_id: pid})
         } catch (error){
-            throw new Error('ha ocurrido un error buscando el producto');
+            logger.error(error);
         }
     }
     
@@ -37,7 +38,7 @@ class ProductManagerMongo {
         try {
             return await this.productModel.findByIdAndUpdate(pid, updatedProduct, { new: true })
         } catch (err) {
-            return new Error(err)
+            logger.error(err)
         }
     }
 
@@ -45,7 +46,7 @@ class ProductManagerMongo {
         try {
             return await this.productModel.findByIdAndDelete(pid)
         } catch (err) {
-            return new Error(err)
+            logger.error(err)
         }
     }
 }

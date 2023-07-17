@@ -15,11 +15,11 @@ const passport = require('passport')
 const  {initializePassport}  = require('../source/config/passportJWT')
 const { errorHandler } = require('./middlewares/err.middleware')
 
-const port =  process.env.PORT;
+const PORT =  process.env.PORT;
 
+const { addLoger, logger } = require('./config/logger')
 
-
-
+app.use(addLoger)
 
 
 //___________________________________________________________________________
@@ -30,9 +30,11 @@ const { Server } = require('socket.io')
 
 
 
-const httpServer = app.listen(port, () => {
-    console.log("Servidor funcionando en el puerto: ",port);
-});
+
+
+const httpServer = app.listen(PORT, () => {
+    logger.info(`Servidor funcionando en puerto: ${PORT}`)
+})
 
 const socketServer = new Server(httpServer)
 
@@ -86,13 +88,13 @@ app.use('/prueba', (req, res)=>{
     res.render('prueba')
 })
 app.use(cookieParser('CoderS3CR3T0'))
-app.get('/cookie', (req, res) => {
-    const name = req.query.name;
-    const email = req.query.email;
-    const cookie = `name=${name}; email=${email}`;
-    res.cookie('myCookie', cookie);
-    res.json({ cookie });
-})
+// app.get('/cookie', (req, res) => {
+//     const name = req.query.name;
+//     const email = req.query.email;
+//     const cookie = `name=${name}; email=${email}`;
+//     res.cookie('myCookie', cookie);
+//     res.json({ cookie });
+// })
 
 app.use(session({
 	store: MongoStore.create({

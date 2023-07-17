@@ -2,9 +2,8 @@ const { Router } = require('express')
 const router = Router()
 const { productModel } = require('../dao/mongo/models/products.model')
 const ProductManagerMongo = require('../dao/mongo/product.mongo');
-const productController = require('../controllers/product.controller');
 const productsManager = new ProductManagerMongo;
-
+const productController = require('../controllers/product.controller')
 
 
 
@@ -13,20 +12,20 @@ const productsManager = new ProductManagerMongo;
 
 //vista inicial de productos
 
-// router.get('/', async (req, res) => {
-//   try {
-//     const result = await productsManager.getProductsM();
-//     let user = req.session.user
-//     res.render('home', {
-//       title: "Lista de Productos",
-//       payload: result,
-//       user
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
-//   }
-// });
+router.get('/', async (req, res) => {
+  try {
+    const result = await productsManager.getProducts();
+    let user = req.session.user
+    res.render('home', {
+      title: "Lista de Productos",
+      payload: result,
+      user
+    });
+  } catch (err) {
+    console.log(err);
+    res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
+  }
+});
 
 
 //VISTA PRODUCTOS PARA AGREGAR A CARRITO

@@ -4,6 +4,8 @@ const { Error } = require('../utils/CustomError/error');
 const { CustomError } = require("../utils/CustomError/customError");
 const { createProductErrorInfo } = require("../utils/CustomError/info");
 const productGenerator = require("../utils/productMockGen");
+const { logger } = require("../config/logger");
+const { error } = require("winston");
 
 
 class productController {
@@ -21,8 +23,7 @@ class productController {
                 user
             });
         } catch (err) {
-            console.log(err)
-            res.render('error', { status: 'error', error: 'Ocurrió un error en la página' })
+            logger.error(error)
         }
     }
 
@@ -34,7 +35,7 @@ class productController {
             const product = await productService.getProductById(id);
             return res.status(200).send(product)
         } catch(err){
-            console.log(err)
+            logger.error(err)
         }
     }
 
@@ -64,7 +65,7 @@ class productController {
             ? res.status(400).send({ error: "No se pudo crear el producto" })
             : res.status(201).send({status:'producto creado', payload: product})
         } catch(err){
-            console.log(err)
+            logger.error(err)
         }
     }
 
@@ -78,7 +79,7 @@ class productController {
             ? res.status(400).send({ error: 'No se ha podido modificar!' })
             : res.status(200).send({ status: `el producto con ID ${id} se ha modificado con exito!`, payload: productModify })
         }catch(err){
-            console.log(err)
+            logger.error(err)
         }
     }
     
@@ -90,7 +91,7 @@ class productController {
             ? res.status(404).send({error: `El producto con ID ${id} no existe`})
             : res.status(200).send({ status:`El producto con ID ${id} se ha eliminado`, payload: deletedProduct});
         }catch(err){
-            console.log(err)
+            logger.error(err)
         }
     }
     
@@ -102,7 +103,7 @@ class productController {
             }
             res.send({status: 'success', payload: products})
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 }

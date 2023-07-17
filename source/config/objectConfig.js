@@ -1,7 +1,10 @@
 const { MongoSingleton } = require('../utils/singleton')
 const dotenv           = require('dotenv')
 const { program }      = require('../utils/process/commander')
-const { mode }         = program.opts
+// const { mode }         = program.opts
+const {commander} = require('../utils/process/commander')
+
+const { mode } = commander.opts()
 
 dotenv.config({
     path: mode === 'development' ? '.env.development' : '.env.production'
@@ -13,6 +16,7 @@ dotenv.config({
 
 
 module.exports={
+    port: process.env.PORT,
     persistence: process.env.PERSISTENCE,
     jwt_secret_key: process.env.JWT_SECRET_KEY,
     gmail_user_app:process.env.GMAIL_USER,

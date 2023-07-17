@@ -21,7 +21,7 @@ const router = Router()
 
 
 
-router.get('/pruebas', (req, res)=>{
+router.get('/pruebaMail', (req, res)=>{
   const enviado = sendMail
   res.send({
     status: 'Email enviado',
@@ -37,7 +37,12 @@ router.get('/stringmuylargo', (req,res)=>{
   res.send(string)
 })
 
-
+router.get('/logger', (req, res) =>{
+  // req.logger.warn('alerta')
+  // req.logger.info('info')s
+  req.logger.warning('warning')
+  res.send({message: 'prueba de logger'})
+})
 
 router.get('/session', (req, res)=>{
   if (req.session.counter) {

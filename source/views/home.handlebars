@@ -6,8 +6,8 @@
       
       <div class="d-flex flex-column mx-2">
         
-        <p class="m-0 text-white" style="font-size: 12px">{{user.email}} </p>
-        <p class="m-0 text-white" style="font-size: 12px">role:{{user.role}} </p>
+        <p class="m-0 text-black" style="font-size: 12px">{{user.email}} </p>
+        <p class="m-0 text-black" style="font-size: 12px">role:{{user.role}} </p>
       </div>
       <button class="btn btn-warning h-50 my-auto"><a href="/logout" class="text-decoration-none text-dark">Log out</a></button>
       {{else}}
@@ -46,7 +46,7 @@
               <td>{{price}}</td>
               <td>{{this.description}}</td>
               <td>{{this.stock}}</td>
-              <td>{{this.thumbnail}}</td>
+              <td><img src="{{this.thumbnail}}" alt="sin imagen" width="12rem"></td>
             </tr>
             {{/each}}
           </tbody>

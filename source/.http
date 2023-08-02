@@ -10,12 +10,13 @@ POST http://localhost:8080/api/products/
 Content-Type: application/json
 
 {
-    "title": "Remera Nike",
-    "description": "Color Negra, Talle S",
+    "title": "Remera Babolat",
+    "description": "Color Azul, Talle M",
     "thumbnail": "",
-    "price": 5500,
-    "stock": 23,
-    "code": "961"
+    "price": 3500,
+    "stock": 22,
+    "code": "984",
+    "category": "Indumentaria" 
 }
 
 

@@ -41,7 +41,8 @@ class productController {
 
     
 
-    createProd = async (req, res)=>{
+    createProd = async (req, res, next)=>{
+        console.log("Prueba")
         try{
             const {title, description, price, code, stock, category, thumbnail} = req.body
             if(!title || !description || !price || !code || !stock || !category){
@@ -59,13 +60,16 @@ class productController {
                     code: Error.INVALID_TYPE_ERROR
                 })
             }
-            const newProduct = new productDto({title, description, price, code, stock, category, thumbnail})
-            const product = await productService.addProduct(newProduct)
+            console.log("arriba")
+            // const newProduct = new productDto({title, description, price, code, stock, category, thumbnail})
+            console.log("abajo")
+            const product = await productService.createProduct(req.body)
+            console.log("abajo 2")
             !product
             ? res.status(400).send({ error: "No se pudo crear el producto" })
             : res.status(201).send({status:'producto creado', payload: product})
         } catch(err){
-            logger.error(err)
+            next(err)
         }
     }
 

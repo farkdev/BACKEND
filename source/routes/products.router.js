@@ -13,7 +13,7 @@ router.get('/', productController.getProducts);
 router.get('/:pid', productController.getProductById);
 
 //CREA PRODUCTO
-router.post('/' , passportCall('current', {session:false}), authorization('admin'), productController.createProd);
+router.post('/', productController.createProd);
 
 //ACTUALIZA PRODUCTO
 router.put('/:pid', passportCall('current', {session:false}), authorization('admin'), productController.updProduct);
@@ -22,7 +22,7 @@ router.put('/:pid', passportCall('current', {session:false}), authorization('adm
 router.delete('/:pid', passportCall('current', {session:false}), authorization('admin'),productController.delete);
 
 
-
+// passportCall('current', {session:false}), authorization('admin')
 
 
 

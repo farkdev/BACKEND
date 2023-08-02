@@ -19,6 +19,25 @@ const PORT =  process.env.PORT;
 
 const { addLoger, logger } = require('./config/logger')
 
+const swaggerJsDoc = require('swagger-jsdoc')
+const swaggerUiExpress = require('swagger-ui-express')
+
+const swaggerOpt = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: 'Documentacion de Carts y Products',
+            description: 'Docs de CRUD sobre products y carts del proyecto'
+        }
+    },
+    apis: [`${__dirname}/docs/**/*.yaml`]
+}
+const specs = swaggerJsDoc(swaggerOpt)
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
+
+
+
+
 app.use(addLoger)
 
 

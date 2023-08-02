@@ -26,7 +26,7 @@ class ProductManagerMongo {
     }
     
 
-    async addProduct(newProduct){
+    async newProduct(newProduct){
         try {
             return await this.productModel.create(newProduct)
         } catch (err) {

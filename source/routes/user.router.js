@@ -7,7 +7,7 @@ const sessionControllers = require('../controllers/session.controllers')
 const router = Router()
 const {passportCall} = require('../config/passportCall')
 const {authorization} = require('../config/passportAuthorization')
-
+const userController = require('../controllers/user.controller')
 
 
 
@@ -19,6 +19,11 @@ const {authorization} = require('../config/passportAuthorization')
 router.post('/login', sessionControllers.login)
 router.post('/register', sessionControllers.register)
 router.get('/logout', sessionControllers.logout)
+router.post('/forgotPassword', userController.forgotPass)
+router.post('/resetPassword', userController.resetPass)
+router.get('/premium/:uid', userController.changeRole)
+
+
 
 router.get('/current', passportCall('current', {session: false}), (req, res)=>{
     res.send(req.user)

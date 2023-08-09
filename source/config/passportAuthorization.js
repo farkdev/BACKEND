@@ -1,11 +1,13 @@
-const authorization = role =>{
+const authorization = (requiredRoles) =>{
     return async (req, res, next)=>{
-        if(!req.user) return res.status(401).send({status: 'error', error: "Sin autorización"})
-        if(req.user.role !== role) return res.status(403).send({status: 'error', error: 'sin permiso'})
+        if(!req.user) return res.status(401).send({status: 'error', error: 'Unauthorized'})
+        const userRole = req.user.role;
+        if (!requiredRoles.includes(userRole)) {
+          return res.status(403).send({ status: 'error', error: 'Not authorized' });
+        }
         next()
     }
 }
-
 
 module.exports = {
     authorization

@@ -15,7 +15,7 @@ class productController {
             const {limit= 5}= req.query
             const{page=1} = req.query
             const { sort } = req.query;
-            let user = req.session.user;
+            let user = req.user;
             const products = await productService.getProducts(limit, page, sort)
             res.render('home', {
                 title: "Lista de Productos",
@@ -45,6 +45,7 @@ class productController {
         console.log("Prueba")
         try{
             const {title, description, price, code, stock, category, thumbnail} = req.body
+
             if(!title || !description || !price || !code || !stock || !category){
                 CustomError.createError({
                     name: 'ERROR, PROD CREATION',
@@ -61,6 +62,7 @@ class productController {
                 })
             }
             console.log("arriba")
+            
             // const newProduct = new productDto({title, description, price, code, stock, category, thumbnail})
             console.log("abajo")
             const product = await productService.createProduct(req.body)

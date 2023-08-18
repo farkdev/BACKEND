@@ -18,13 +18,17 @@ router.get('/', cartController.getCarts)
 router.get('/:cid', cartController.getCartByID)
 
 //AGREGA PRODUCTOS AL CARRITO
-router.post('/:cid/product/:pid',  cartController.addToCart)
+router.post('/:cid/products/:pid',  cartController.addToCart)
 // passportCall('current', {session: false}), authorization('user'),
+
 //PUT MODIFICA PRODUCTOS DEL CARRITO
-router.put('/:cid/product/:pid', cartController.cartProdUpd)
+router.put('/:cid/products/:pid', cartController.modifyProductFromCart)
+
+//MODIFICA CARRITO COMPLETO
+router.put('/:cid', cartController.modifyCart)
 
 //DELETE PRODUCTOS DEL CART
-router.delete('/:cid/product/:pid', cartController.cartDelProd)
+router.delete('/:cid/products/:pid', cartController.deleteProductFromCart)
 
 //BORRA CARRITO
 router.delete('/:cid', cartController.cartDelete)

@@ -13,8 +13,8 @@ const { logger } = require('../config/logger')
 
 router.use('/api/products', productsRouter)
 router.use('/api/carts', cartRouter)
-router.use('/', viewsRouter, users)
-// router.use('/api/session', users)
+router.use('/api/session', users)
+router.use('/', viewsRouter)
 router.use('/realtimeproducts', viewsRouter)
 router.use('/prueba', prueba)
 router.get('/loggerTest', async (req, res)=>{

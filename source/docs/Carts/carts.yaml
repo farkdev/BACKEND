@@ -49,7 +49,7 @@ paths:
                 _id: "645efaecef447196b4b7607f"
                 products:
                   - product: 
-                      _id: "644c3d2cf3527c05a29c189f"
+                      _id: "645ebf3c084caa77e6912f70"
                       title: "producto de prueba 2"
                       description: "prueba 2"
                       price: 1023
@@ -61,7 +61,7 @@ paths:
                         - "ruta de imagen 2"
                     cantidad: 12
                   - product: 
-                      _id: "64bef0f405e2ed7782ff3fd8"
+                      _id: "645ebf72084caa77e6912f74"
                       title: "producto de prueba 13"
                       description: "prueba 13"
                       price: 1003
@@ -240,13 +240,13 @@ components:
                 type: number
                 description: Cantidad del producto seleccionado
       example:
-        _id: ObjectId('647e4a4da285b6546c75e632')
+        _id: ObjectId('646286f80b3d225b3483875a')
         products:
-          - product: ObjectId('644c3cd8f3527c05a29c189c')
+          - product: ObjectId('645ebf1c084caa77e6912f6c')
             cantidad: 1
-          - product: ObjectId('64bef0f405e2ed7782ff3fd8')
+          - product: ObjectId('645ebf11084caa77e6912f6a')
             cantidad: 1
-          - product: ObjectId('644c3d2cf3527c05a29c189f')
+          - product: ObjectId('645ebf08084caa77e6912f68')
             cantidad: 18
 
   requestBodies: 
@@ -262,9 +262,9 @@ components:
             type: number
             description: Cantidad del producto seleccionado              
       example:
-          - product: '644c3cd8f3527c05a29c189c'
+          - product: '645ebf08084caa77e6912f68'
             cantidad: 1
-          - product: '64bef0f405e2ed7782ff3fd8'
+          - product: '645ebf11084caa77e6912f6a'
             cantidad: 1
     cantidad:
       type: object

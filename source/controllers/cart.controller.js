@@ -1,16 +1,18 @@
 const { cartService, productService } = require("../service");
 const { v4: uuidv4 } = require('uuid');
-const { sendMail } = require('../utils/nodemailer')
+const { sendMail } = require('../utils/nodemailer');
+const { logger } = require("../config/logger");
+
 
 class cartController {
 
     createCart = async(req, res)=>{
         try{
             const newCart = {products:[]}
-            await cartService.createCart(newCart)
-            res.status(201).send({ message: 'Carrito creado correctamente'})
+            const result = await cartService.createCart(newCart)
+            res.status(201).send({ status: 'success', payload: result})
         }catch(err){
-            console.log(err)
+            logger.error(err)
         } 
     }
 
@@ -18,12 +20,11 @@ class cartController {
     getCarts = async (req, res)=>{
         try{
             const carts = await cartService.getCarts()
-            res.status(200).send({
-            status: 'success',
-            payload: carts
-        })
+            !carts
+            ?res.status(500).send({status:'error', error: 'no hay carritos para mostrar'})
+            :res.status(200).send({status:'success', payload: carts})
         } catch (error){
-            console.log(error)
+            logger.error(error)
         }
     }
 
@@ -31,16 +32,15 @@ class cartController {
         try{
             const cid = req.params.cid;
             const cart = await cartService.getCartById(cid);
-            if(!cart){
-                res.status(404).send({ message: `El carrito con ID ${cid} no existe` })
-            }
-            res.status(201).send({status: 'success', payload: cart})
+            !cart
+            ?res.status(404).send({status:'error', error: `El carrito con ID ${cid} no existe` })
+            :res.status(200).send({status: 'success', payload: cart})
         } catch(err){
-            console.log(err)
+            logger.error(err)
         }
     }
 
-
+    //AGREGA PRODUCTO AL CARRITO
     addToCart = async(req, res) =>{
         try{
             const cid = req.params.cid
@@ -54,41 +54,52 @@ class cartController {
     
             res.status(201).send({message:'success', payload: addProduct})
         }catch(err){
-            console.log(err)
+            logger.error(err)
         }
     }
-
-    cartProdUpd = async(req, res) =>{
+    //MODIFICA PRODUCTO DENTRO DEL CARRITO
+    modifyProductFromCart = async(req, res) =>{
         try{
-            const { cid, pid } = req.params
-            const quantity = req.body
-            console.log(quantity)
-            let cart = await cartService.getCartById(cid)
-            if (cart !== null) {
-                let result = await cartService.modifyProdFromCart(cid, pid, quantity)
-                res.status(200).send({
-                    status: 'success',
-                    payload: result})
-                }
-        } catch(error) {
-            return new Error(error)
-        }
-    }
-
-    cartDelProd = async(req, res) =>{
-        try {   
             const cid = req.params.cid
             const pid = req.params.pid
-            await cartService.deleteCartByID(cid, pid)
-            res.send({
-                status: 'success',
-                payload: `Producto id: ${pid} fue eliminado del carrito: ${cid}`
-            })
-        } catch (error) {
-            return new Error(error)
+            const quantity = req.body
+            console.log(quantity)
+            const result = await cartService.modifyProductFromCart(cid, pid, quantity)
+            !result
+            ?res.status(400).send({status:'error', error:'no se pudo modificar el producto del carrito'})
+            :res.status(200).send({status:'success', payload: result});
+        } catch(error) {
+            logger.error(error)
         }
     }
-
+    //MODIFICA CARRITO COMPLETO
+    modifyCart = async(req, res)=>{
+        try{
+            const cid = req.params.cid
+            const newCart= req.body
+            let respuesta= await cartService.modifyCart(cid, newCart)
+            !respuesta
+            ?res.status(400).send({status:'error', error:'No se pudo modificar el carrito'})
+            :res.status(200).send({status: 'success', payload: respuesta})
+        }catch(error){
+            logger.error(error)
+        }
+    }
+    //ELIMINO 1 PRODUCTO DEL CARRITO
+    deleteProductFromCart = async(req, res)=>{
+        try{
+            const cid = req.params.cid
+            const pid = req.params.pid
+            let respuesta = await cartService.removeProductFromCart(cid,pid)
+            !respuesta
+            ?res.status(400).send({status:'error', error:'no se pudo eliminar el producto del carrito'})
+            :res.status(200).send({ status:'success', payload: respuesta})
+        }catch(error){
+            logger.error(error)
+        }
+    }
+    
+    //ELIMINO CARRITO
     cartDelete = async (req, res) =>{
         try {   
             const { cid } = req.params
@@ -98,7 +109,7 @@ class cartController {
                 payload: `Carrito id: ${cid} fue eliminado`
             })
         } catch (error) {
-            return new Error(error)
+            logger.error(error)
         }
 
     }
@@ -158,14 +169,14 @@ class cartController {
             }
             
         } catch (error){
-            console.log(error)
+            logger.error(error)
         }
     }
 
 
-
-
-
 }
+
+
+
 
 module.exports = new cartController()

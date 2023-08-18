@@ -18,7 +18,7 @@ class ProductManager {
         }
     }
 
-    async addProduct(titulo, descripcion, precio, thumbnail, code, stock, categoria, status) {
+    async createProduct(titulo, descripcion, precio, thumbnail, code, stock, categoria, status) {
       try {
         const product = {
           titulo,

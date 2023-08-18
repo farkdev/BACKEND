@@ -52,7 +52,7 @@ class SessionController {
     register = async (req, res)=>{
     
         const {first_name, last_name, email, date_of_birth, password }  = req.body
-        const existUser = await userService.findOne({email})
+        const existUser = await userService.getUser({email})
         if(existUser){ 
             return res.send({status:'error', mensaje: "El email ya se encuentra registrado"})
         }
@@ -89,7 +89,7 @@ class SessionController {
         res.cookie('coderCookieToken', accesTok, {
             maxAge: 60*60*100,
             httpOnly: true,
-        }).send({status: success, message: 'Registro hecho'})
+        }).send({status: "success", message: 'Registro hecho'})
     }
         
     logout = (req, res) =>{

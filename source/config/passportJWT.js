@@ -19,7 +19,7 @@ const configStrategy = {
     secretOrKey: process.env.JWT_SECRET_KEY
 }
 
-const initializePassport= ()=>{
+const initPassport= ()=>{
     passport.use('current', new JWTStrategy(configStrategy, async(jwt_payload, done)=>{
         try {
             return done(null, jwt_payload)
@@ -31,5 +31,5 @@ const initializePassport= ()=>{
 
 
 module.exports = {
-    initializePassport
+    initPassport
 }

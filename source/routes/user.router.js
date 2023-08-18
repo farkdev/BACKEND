@@ -1,6 +1,5 @@
 const { Router } = require('express')
 const { userModel } = require('../dao/mongo/models/user.model')
-const {auth} = require('../middlewares/auth.middleware')
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
 const passport = require('passport')
 const sessionControllers = require('../controllers/session.controllers')
@@ -9,8 +8,7 @@ const {passportCall} = require('../config/passportCall')
 const {authorization} = require('../config/passportAuthorization')
 const userController = require('../controllers/user.controller')
 
-
-
+const { uploader } = require("../utils/multer")
 
 
 
@@ -23,11 +21,22 @@ router.post('/forgotPassword', userController.forgotPass)
 router.post('/resetPassword', userController.resetPass)
 router.get('/premium/:uid', userController.changeRole)
 
+router.post('/documents', uploader.array('uploads'), async(req, res)=>{
+    try {
+        res.status(200).send({
+            status: 'success',
+            message: 'se subió correctamente'
+        })
+    } catch (error) {
+        console.log(error)
+    }
 
-
-router.get('/current', passportCall('current', {session: false}), (req, res)=>{
-    res.send(req.user)
 })
+
+router.get('/current', passportCall('current', {session: false}),(req,res)=>{
+    res.status(200).send({status: 'success', payload: req.user})
+})
+
 
 
 

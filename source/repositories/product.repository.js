@@ -14,7 +14,7 @@ class ProductRepo {
     }
 
     createProduct(newProduct){
-        return this.dao.newProduct(newProduct)
+        return this.dao.createProduct(newProduct)
     }
 
     updateProduct(pid){

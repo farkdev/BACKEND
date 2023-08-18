@@ -2,9 +2,8 @@ const { Router } = require('express')
 const router = Router()
 const { productModel } = require('../dao/mongo/models/products.model')
 const ProductManagerMongo = require('../dao/mongo/product.mongo');
+const viewController = require('../controllers/view.controller');
 const productsManager = new ProductManagerMongo;
-const productController = require('../controllers/product.controller')
-
 
 
 
@@ -121,18 +120,23 @@ router.get('/realtimeproducts', async(req, res) =>{
 })
 
 
-router.get('/login', async (req, res) =>{
-  res.render('login', {})
+router.get('/api/session/login', (req,res)=>{
+  res.render('login',{})
 })
 
-
-router.get('/register', async (req,res)=>{
-  res.render("registerForm", {})
+router.get('/api/session/register', (req,res)=>{
+  res.render('registerForm',{})
 })
 
+router.get('/api/session/forgotPassword', (req,res)=>{
+  res.render('forgotPassword',{})
+})
 
+router.get('/api/session/resetPassword', viewController.resetPasswordpage)
 
-
+router.get('/api/session/documents', (req,res) =>{
+  res.render('uploadDocuments',{})
+})
 
 
 

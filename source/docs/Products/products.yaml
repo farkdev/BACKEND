@@ -145,7 +145,7 @@ components:
             type: string
             description: Links de imagenes del producto
       example:
-        _id: '644c3cd8f3527c05a29c189c'
+        _id: '645ebf72084caa77e6912f74'
         title: producto de prueba 1
         description: prueba 1
         price: 1200

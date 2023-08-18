@@ -33,7 +33,9 @@ class productController {
         try{
             const id = req.params.pid;
             const product = await productService.getProductById(id);
-            return res.status(200).send(product)
+            !product
+            ?res.status(404).send({status:'error', error: 'No existe el producto' })
+            :res.status(200).send({status: 'success', payload: product})
         } catch(err){
             logger.error(err)
         }
@@ -41,7 +43,7 @@ class productController {
 
     
 
-    createProd = async (req, res, next)=>{
+    createProduct = async (req, res, next)=>{
         console.log("Prueba")
         try{
             const {title, description, price, code, stock, category, thumbnail} = req.body
@@ -69,7 +71,7 @@ class productController {
             console.log("abajo 2")
             !product
             ? res.status(400).send({ error: "No se pudo crear el producto" })
-            : res.status(201).send({status:'producto creado', payload: product})
+            : res.status(201).send({status:'success', payload: product})
         } catch(err){
             next(err)
         }

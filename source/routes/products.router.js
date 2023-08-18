@@ -13,7 +13,7 @@ router.get('/', productController.getProducts);
 router.get('/:pid', productController.getProductById);
 
 //CREA PRODUCTO
-router.post('/', productController.createProd);
+router.post('/', productController.createProduct);
 
 //ACTUALIZA PRODUCTO
 router.put('/:pid', passportCall('current', {session:false}), authorization('admin'), productController.updProduct);

@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose')
-const mongoosePaginate = require('mongoose-paginate-v2')
 
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const collection = 'usuarios'
 
@@ -35,6 +35,19 @@ const userSchema = new Schema({
     cart: {
         type: Schema.Types.ObjectId,
         ref: "carts"
+    },
+    documents: [{
+        name: {
+            type: String,
+            required: true
+        },
+        reference: {
+            type: String,
+            required: true
+        }
+    }], 
+    last_connection: {
+        type: String
     }
 })
 

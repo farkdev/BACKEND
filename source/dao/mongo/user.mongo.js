@@ -31,6 +31,13 @@ class userDaoMongo {
         return await this.userModel.findOneAndDelete({_id: uid})
     }
 
+    async updateUser(uid,currentDate){
+        try {
+            return await this.userModel.updateOne({ _id: uid }, { $set: { last_connection: currentDate } })
+        } catch (error) {
+            logger.error(error)
+        }
+    }
     
 }
 

@@ -12,7 +12,7 @@ const cookie = require('./routes/prueba.router')
 const MongoStore = require('connect-mongo')
 const { initPassportMid, initPassportGithub } = require('./config/passport.config')
 const passport = require('passport')
-const  {initializePassport}  = require('../source/config/passportJWT')
+const  {initPassport}  = require('../source/config/passportJWT')
 const { errorHandler } = require('./middlewares/err.middleware')
 
 const PORT =  process.env.PORT;
@@ -95,7 +95,7 @@ app.use(cookieParser())
 
 objectConfig.connectDB()
 
-initializePassport()
+initPassport()
 // initPassportMid()
 initPassportGithub()
 passport.use(passport.initialize())

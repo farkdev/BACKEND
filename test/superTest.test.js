@@ -7,44 +7,43 @@ const requester = supertest('http://localhost:8080')
 
 
 describe('Testing proyecto', ()=>{
-     describe('Test de Sesion', ()=>{
+     describe('Test de User', ()=>{
         let userId 
         let userRole
         let userEmail
         let cookie 
-
         //este usuario creado es utilizado en los demas test de session, 
         //si se ejecuta mas de una vez cambiar email de userMock
         //ya que fallaria debido a que el campo email es unico y no se puede volver a crear
-        it('POST /register debe crear usuario correctamente', async()=>{
+        it('POST /register debe crear usuario correctamente', async () => {
             const userMock = {
-                username: 'userTest',
-                first_name:'UserSupertest',
+                first_name: 'UserSupertest',
                 last_name: 'userSuperSuperTest',
-                email: 'userTest@usertest.com',
+                email: 'usTest@usertest.com',
                 date_of_birth: '2023-10-10',
                 password: 'test123'
-            }
-            const response = await requester.post('/register').send(userMock)
-            expect(response.statusCode).to.be.equal(201)
-            expect(response).to.be.ok
-            expect(response.body).to.have.property('status').that.is.equal('success')
-            expect(response.body).to.have.property('payload')
-            expect(response._body.payload).to.have.property('_id')
-
-            userId = response.body.payload._id
-            userRole = response.body.payload.role
-            userEmail = response.body.payload.email
-
-        })
-
+            };
+        
+            const response = await requester.post('/api/session//register').send(userMock);
+            
+            expect(response.statusCode).to.be.equal(200);
+            expect(response).to.be.ok;
+            expect(response.body).to.have.property('status').that.is.equal('success');
+            expect(response).to.have.property('payload');
+            expect(response.body.payload).to.have.property('_id');
+        
+            userId = response.body.payload._id;
+            userRole = response.body.payload.role;
+            userEmail = response.body.payload.email;
+        });
+        
 
         it('POST /login debe loguear usuario correctamente y devolver una cookie', async()=>{
             const userMock = {
                 email: 'userTest@usertest.com',
                 password: 'test123'
             }
-            const response = await requester.post('/login').send(userMock)
+            const response = await requester.post('/api/session/login').send(userMock)
             const cookieResult = response.headers['set-cookie'][0]
             cookie = {
                 name: cookieResult.split('=')[0],
@@ -58,7 +57,7 @@ describe('Testing proyecto', ()=>{
         })
 
         it('GET /current debe enviar el jwt del usuario y devolver los datos', async()=>{
-            const response =await requester.get('/current').set('Cookie',[`${cookie.name}=${cookie.value}`])
+            const response = await requester.get('/current').set('Cookie',[`${cookie.name}=${cookie.value}`])
             expect(response).to.be.ok
             expect(response.statusCode).to.be.equal(200)
             expect(response.body).to.have.property('status').that.is.equal('success')
@@ -67,7 +66,7 @@ describe('Testing proyecto', ()=>{
             expect(cookie.value).to.be.ok
         })
 
-        it('GET /api/session/premIum/:uid debe cambiar el role del usuario de user a premium y viceversa', async()=>{
+        it('GET /premium/:uid debe cambiar el role del usuario de user a premium y viceversa', async()=>{
             const response =await requester.get(`/premium/${userId}`)
             expect(response).to.be.ok
             expect(response.statusCode).to.be.equal(200)
@@ -77,10 +76,10 @@ describe('Testing proyecto', ()=>{
         })
 
         it('GET /logout debe eliminar la sesión, destruir la cookie y redireccionar a /login', async()=>{
-            const response = await requester.get('/logout').set('Cookie', [`${cookie.name}=${cookie.value}`])
+            const response = await requester.get('/api/session/logout').set('Cookie', [`${cookie.name}=${cookie.value}`])
             expect(response).to.be.ok
             expect(response.statusCode).to.be.equal(302)
-            expect(response.headers['location']).to.be.equal('login')
+            expect(response.headers['location']).to.be.equal('/login')
             const setCookieHeader = response.headers['set-cookie'];
             expect(setCookieHeader).to.be.an('array');
             expect(setCookieHeader).to.have.lengthOf(1);
@@ -93,20 +92,23 @@ describe('Testing proyecto', ()=>{
         let authCookie
 
         before(async () => {
-            const authResponse = await requester.post('/login').send({
+            const authResponse = await requester.post('/api/session/login').send({
                 email: 'userTest@usertest.com',
                 password: 'test123'
             });
             authCookie = authResponse.headers['set-cookie'][0]
         })
 
-        it('GET /api/products/ debe traer todo los productos',async ()=>{
-            const response = await requester.get('/api/products')
-            expect(response).to.be.ok
-            expect(response.statusCode).to.be.equal(200)
-            expect(response.body).to.have.property('payload').that.is.an('object')
-            expect(response.body.payload).to.have.property('docs').that.is.an('array')
-        })
+        it('GET /api/products/ debe traer todo los productos', async () => {
+            const response = await requester.get('/api/products');
+            
+            expect(response).to.be.ok;
+            expect(response.status).to.equal(200);
+            expect(response.body).to.have.property('payload').that.is.an('object');
+            
+            const payload = response.body.payload;
+            expect(payload).to.have.property('docs').that.is.an('array');
+        });
 
      it('POST /api/products/ debe crear un producto correctamente',async ()=>{
             const productMock = {
@@ -155,39 +157,49 @@ describe('Testing proyecto', ()=>{
         })
 
         it('DELETE /api/products/:pid debe eliminar un producto correctamente', async () => {
-            const response = await requester.delete(`/api/products/${prodId}`).set('Cookie', [authCookie])
-            expect(response).to.be.ok
-            expect(response.statusCode).to.equal(200)
-            expect(response.body).to.have.property('status').that.is.equal('success')
-            expect(response.body).to.have.property('payload').that.is.an('object')
-            expect(response.body.payload).to.have.property('_id')
-            expect(response.body.payload._id).to.equal(prodId)
-        })
+            const response = await requester.delete(`/api/products/${prodId}`).set('Cookie', [authCookie]);
+        
+            expect(response).to.be.ok;
+            expect(response.statusCode).to.equal(200);
+            expect(response.body).to.have.property('status').that.is.equal('success');
+            expect(response.body).to.have.property('payload').that.is.an('object');
+            expect(response.body.payload).to.have.property('_id');
+            expect(response.body.payload._id).to.equal(prodId);
+        
+            // Verifica que el producto realmente haya sido eliminado en la base de datos
+            const deletedProduct = await productService.getProductById(prodId);
+            expect(deletedProduct).to.be.null;
+        });
+        
 
     })
 
     describe('TEST DE CARRITOS', async()=>{
         let cartId
-        let productId = '644c3cd8f3527c05a29c189c'
-        before(async () => {
-            const authResponse = await requester.post('/api/session/login').send({
-                email: 'userTest@usertest.com',
-                password: 'test123'
-            });
-            authCookie = authResponse.headers['set-cookie'][0]
-        })
+        let productId = '64504a143d92f39d390e95bd'
+        // before(async () => {
+        //     const authResponse = await requester.post('/api/login').send({
+        //         email: 'userTest@usertest.com',
+        //         password: 'test123'
+        //     });
+        //     authCookie = authResponse.headers['set-cookie'][0]
+        // })
 
-        it('POST /api/carts/ debe crear un cart vacio',async ()=>{
-            const response = await requester.post('/api/carts')
-            expect(response).to.be.ok
-            expect(response.statusCode).to.be.equal(201)
-            expect(response.body).to.have.property('status').that.is.equal('success')
-            expect(response.body).to.have.property('payload').that.is.an('object')
-            expect(response.body.payload).to.have.property('products').that.is.an('array')
-            expect(response.body.payload).to.have.property('_id')
-
-            cartId = response.body.payload._id
-        })
+        it('POST /api/carts/ debe crear un cart vacio', async () => {
+            const response = await requester.post('/api/carts');
+            
+            expect(response).to.be.ok;
+            expect(response.statusCode).to.be.equal(201);
+            expect(response.body).to.have.property('status').that.is.equal('success');
+            expect(response.body).to.have.property('payload').that.is.an('object');
+            expect(response.body.payload).to.have.property('products').that.is.an('array');
+            expect(response.body.payload).to.have.property('_id');
+        
+            cartId = response.body.payload._id;
+        
+            //validación adicional para asegurar de que se ha creado un carrito vacío
+            expect(response.body.payload.products).to.have.lengthOf(0);
+        });
 
         it('GET /api/carts/ debe traer todos los carts',async ()=>{
             const response = await requester.get('/api/carts')
@@ -207,7 +219,7 @@ describe('Testing proyecto', ()=>{
             expect(response.body.payload).to.have.property('products').that.is.an('array')
         })
 
-        it('POST /api/carts/:cid/products/:pid debe agregar un producto al carrito',async ()=>{
+        it('POST /api/carts/:cid/product/:pid debe agregar un producto al carrito',async ()=>{
             const cantidadProd = {
                 cantidad: 10
             }
@@ -247,11 +259,11 @@ describe('Testing proyecto', ()=>{
         it('PUT /api/carts/:cid debe modificar el carrito completo',async ()=>{
             const modifiedCart = [
                 {
-                    product: '644c3d40f3527c05a29c18a1',
+                    product: '645eaf38968986e5d0689a8a',
                     cantidad: 15
                 },
                 {
-                    product: '644c3d2cf3527c05a29c189f',
+                    product: '645eaf67968986e5d0689a8c',
                     cantidad: 5
                 }
             ]
@@ -272,7 +284,7 @@ describe('Testing proyecto', ()=>{
         })
 
         it('DELETE /api/carts/:cid/products/:pid debe eliminar un producto del carrito',async ()=>{
-            let deleteProd = '644c3d40f3527c05a29c18a1'
+            let deleteProd = '645eaf38968986e5d0689a8a'
             const response = await requester.delete(`/api/carts/${cartId}/products/${deleteProd}`)
             expect(response).to.be.ok
             expect(response.statusCode).to.be.equal(200)

@@ -1,6 +1,5 @@
-
 <nav class="navbar navbar-light bg-dark px-3">
-  <a class="navbar-brand" href="api/products/">Inicio</a>
+  <a class="navbar-brand" href="#">Navbar</a>
   <div class="d-flex">
       <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" class="bi bi-person-fill my-auto" viewBox="0 0 16 16">
       <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
@@ -10,10 +9,10 @@
         <p class="m-0 text-white" style="font-size: 12px">{{user.email}} </p>
         <p class="m-0 text-white" style="font-size: 12px">role:{{user.role}} </p>
       </div>
-      <button class="btn btn-warning h-50 my-auto"><a href="logout" class="text-decoration-none text-dark">Log out</a></button>
+      <button class="btn btn-warning h-50 my-auto"><a href="/api/session/logout" class="text-decoration-none text-dark">Log out</a></button>
       {{else}}
       <div>
-      <button class="btn btn-warning mx-2"><a href="login" class="text-decoration-none text-dark">Log In</a></button>
+      <button class="btn btn-warning mx-2"><a href="/api/session/login" class="text-decoration-none text-dark">Log In</a></button>
       </div>
       {{/if}}
 
@@ -30,13 +29,13 @@
       <thead class="text-center">
         <tr>
           <th scope="col">#ID</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Codigo</th>
-          <th scope="col">Precio</th>
-          <th scope="col">Categoria</th>
-          <th scope="col">Descripcion</th>
-          <th scope="col">Stock</th>
-          <th scope="col">Imagenes</th>
+          <th scope="col">nombre</th>
+          <th scope="col">codigo</th>
+          <th scope="col">precio</th>
+          <th scope="col">categoria</th>
+          <th scope="col">descripcion</th>
+          <th scope="col">stock</th>
+          <th scope="col">imagenes</th>
         </tr>
       </thead>
 
@@ -58,15 +57,15 @@
     </table>
     <div id="pages" class="d-flex align-items-center justify-content-center mb-5">
           {{#if hasPrevPage}}
-          <a href="{{prevLink}}"><button class="btn btn-warning rounded-0">anterior</button></a>
+          <a href="{{prevLink}}"><button class="btn btn-warning rounded-0">Anterior</button></a>
           {{/if}}
 
           {{#if hasNextPage}}
-          <a href="{{nextLink}}"><button class="btn btn-warning rounded-0">siguiente</button></a>
+          <a href="{{nextLink}}"><button class="btn btn-warning rounded-0">Siguiente</button></a>
           {{/if}}
     </div>
     {{else}}
-    <h3>No hay productos para mostrar</h3>
+    <h3>No hay productos para mostrar!</h3>
     {{/if}}
   </div>
 
@@ -96,5 +95,6 @@
 </div>
 
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="/socket.io/socket.io.min.js"></script>
 <script src="/static/js/realtimeprod.js"></script>
+<script src=" https://cdn.jsdelivr.net/npm/sweetalert2@11.7.1/dist/sweetalert2.all.min.js "></script>

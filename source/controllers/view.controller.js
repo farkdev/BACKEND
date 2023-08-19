@@ -60,7 +60,7 @@ class ViewsController{
     getRealTimeProducts = async(req, res)=>{
         try{
             let user = req.session.user
-            const carts = await productService.getRealTimeProducts()
+            const carts = await productService.getProducts()
 
             res.render('realTimeProducts', {
                 title: "Lista de productos en tiempo real",

@@ -8,23 +8,8 @@ const productsManager = new ProductManagerMongo;
 
 
 
-
 //vista inicial de productos
-
-router.get('/', async (req, res) => {
-  try {
-    const result = await productsManager.getProducts();
-    let user = req.session.user
-    res.render('home', {
-      title: "Lista de Productos",
-      payload: result,
-      user
-    });
-  } catch (err) {
-    console.log(err);
-    res.render('error', { status: 'error', error: 'Ocurrió un error en la página' });
-  }
-});
+router.get('/', viewController.getProducts)
 
 
 //VISTA PRODUCTOS PARA AGREGAR A CARRITO
@@ -74,50 +59,8 @@ router.get('/products', async(req,res)=>{
   }
 })
 
-//PROBANDO QUE MANERA FUNCIONA
-// router.get('/products', async (req, res) => {
-//   try{ 
-//     const {page=1, limit=4, sort="asc"} = req.query
-//     let sortOptions={}
-//     if (sort === 'asc') {
-//         sortOptions = { price: 1 };
-//     } else if (sort === 'desc') {
-//         sortOptions = { price: -1 };
-//     }
-//     const listPro = await productModel.paginate({}, {limit, page, sort, lean: true})
-//     const { docs, hasPrevPage, hasNextPage, prevPage, nextPage, totalPages} = listPro
-//     const prevLink = hasPrevPage ? `/products/?page=${prevPage}` : '/';
-//     const nextLink = hasNextPage ? `/products/?page=${nextPage}` : '/';
-//     res.render('products',{
-//       status: 'success',
-//       products: docs,
-//       hasPrevPage,
-//       hasNextPage,
-//       nextPage,
-//       prevPage,
-//       prevLink,
-//       nextLink,
-//       totalPages,
-//       listPro,
-//       title: "Productos"
-//     })
-//   } catch (error){
-//     console.log(error)
-//   }
-// })
 
-
-
-
-router.get('/realtimeproducts', async(req, res) =>{
-    
-  const prodList =  await productsManager.getProducts()
-
-  let datosProd = {
-      listaProductosReal: prodList
-  }
-  res.render('realtimeproducts', datosProd)
-})
+router.get('/realTimeProducts',passportCall('current', {session: false}),authorization(['admin', 'premium']), viewsController.getRealTimeProducts)
 
 
 router.get('/api/session/login', (req,res)=>{

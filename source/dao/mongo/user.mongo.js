@@ -1,4 +1,6 @@
+const { logger } = require("../../config/logger");
 const { userModel } = require("./models/user.model");
+
 
 class userDaoMongo {
     constructor() {
@@ -31,9 +33,9 @@ class userDaoMongo {
         return await this.userModel.findOneAndDelete({_id: uid})
     }
 
-    async updateUser(uid,currentDate){
+    async updateUser(uid,updateData){
         try {
-            return await this.userModel.updateOne({ _id: uid }, { $set: { last_connection: currentDate } })
+            return await this.userModel.updateOne({ _id: uid }, { $set: updateData })
         } catch (error) {
             logger.error(error)
         }

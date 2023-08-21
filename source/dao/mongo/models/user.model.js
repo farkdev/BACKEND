@@ -44,10 +44,15 @@ const userSchema = new Schema({
         reference: {
             type: String,
             required: true
-        }
+        },
+        _id: false
     }], 
     last_connection: {
         type: String
+    },
+    uploadedDocuments: {
+        type: Boolean,
+        default: false
     }
 })
 

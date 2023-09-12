@@ -1,11 +1,11 @@
 {
-  "name": "servidor",
+  "name": "src",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "dev": "node source/app.js --mode development",
-    "start": "node source/app.js --mode production",
+    "start": "node src/app.js --mode production",
     "test": "mocha test/supertest.test.js"
   },
   "keywords": [],

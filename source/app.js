@@ -2,20 +2,23 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const products = require('./data.json')
 const handlebars = require('express-handlebars')
+const { Server } = require('socket.io')
+const MongoStore = require('connect-mongo')
+const session = require('express-session')
 const {uploader} = require('./utils/multer')
 const {socketProducts} = require ('./public/js/socketProducts')
 const app = express()
 const objectConfig  = require('./config/objectConfig')
 const routerServer = require('../source/routes/index.router')
-const session = require('express-session')
+const { chatService, productService } = require('./service/index')
 const cookie = require('./routes/prueba.router')
-const MongoStore = require('connect-mongo')
+
 const { initPassportMid, initPassportGithub } = require('./config/passport.config')
 const passport = require('passport')
 const  {initPassport}  = require('../source/config/passportJWT')
 const { errorHandler } = require('./middlewares/err.middleware')
 
-const PORT =  process.env.PORT;
+const PORT =  process.env.PORT; 
 
 const { addLoger, logger } = require('./config/logger')
 
@@ -35,21 +38,9 @@ const swaggerOpt = {
 const specs = swaggerJsDoc(swaggerOpt)
 app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
-
-
-
 app.use(addLoger)
 
-
 //___________________________________________________________________________
-messages = []
-const messageManager = require('./dao/mongo/chat.mongo')
-
-const { Server } = require('socket.io')
-
-
-
-
 
 const httpServer = app.listen(PORT, () => {
     logger.info(`Servidor funcionando en puerto: ${PORT}`)
@@ -57,40 +48,14 @@ const httpServer = app.listen(PORT, () => {
 
 const socketServer = new Server(httpServer)
 
-socketServer.on('connection', socket => {
-    console.log('Cliente conectado')
-    socket.on('message', data =>{
-        console.log(`Mensaje recibido ${data.message}`)
-        const message = {
-            user: data.user,
-            message: String(data.message),
-            
-        }
-        messageManager.saveMessage(message.user, message.message)
-        socket.broadcast.emit("message", message);
-
-    })
-
-    messageManager.allMessages().then(messages => {
-        socketServer.emit('messageLogs', messages);
-    })
-
-})
-
-app.get('/chat', (req, res)=>{
-    res.render('chat', {})
-})
 //___________________________________________________________________________
 
 app.engine('handlebars', handlebars.engine())
 app.set('views', __dirname+'/views')
 app.set('view engine', 'handlebars')
-
-
 app.use('/static' , express.static(__dirname+'/public'))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-
 app.use(cookieParser())
 
 objectConfig.connectDB()
@@ -100,7 +65,6 @@ initPassport()
 initPassportGithub()
 passport.use(passport.initialize())
 passport.use(passport.session())
-
 
 //cookies
 app.use('/prueba', (req, res)=>{
@@ -134,8 +98,6 @@ app.use(cookie)
 app.use(routerServer)
 app.use(errorHandler)
 
-
-
 app.post('/single', uploader.single('myfile'), (req, res)=>{
     res.status(200).send({
         status: 'success',
@@ -144,9 +106,64 @@ app.post('/single', uploader.single('myfile'), (req, res)=>{
 
 })
 
-
-
-
-
-
 socketProducts(socketServer)
+
+//CHAT
+
+app.get('/chat', (req, res)=>{
+    res.render('chat', {})
+})
+socketServer.on('connection', socket => {
+    console.log('Cliente conectado')
+    socket.on('message', async(data) => {
+		try{
+			await chatService.saveMessages(data)
+			const messages = await chatService.getMessages()
+			socketServer.emit('messageLogs', messages)
+		}catch(error){
+			logger.error(error)
+		}
+    })
+
+    socket.on('authenticated', data => {
+        socket.broadcast.emit('newUserConnected', data)
+    })
+})
+
+socketServer.on('connection', socket=>{
+	logger.info("Cliente conectado")
+	
+	socket.on('deleteProduct', async (pid)=>{
+		try{
+			const isValidObjectId = ObjectId.isValid(pid.id)
+			if (!isValidObjectId) {
+			  return socket.emit('newList', {status: "error", message: `El ID del producto es inválido`})
+			}
+		  
+			const product = await productService.getProductById(pid.id)
+			if(product) {
+			  await productService.deleteProduct(pid.id)
+			  const data = await productService.getRealTimeProducts()
+			  return socket.emit('newList', data)
+			}
+			return socket.emit('newList', {status: "error", message: `El producto con ID ${pid.id} no existe`})
+		}catch(error){
+			logger.error(error)
+		}
+	})
+
+	socket.on('addProduct', async (data) => {
+		try {
+			const newProduct = await productService.createProduct(data);
+			if(!newProduct){
+				return new Error(err)
+			}else{
+				const newData = await productService.getRealTimeProducts()
+				return socket.emit('productAdded', newData)
+			}
+		} catch (error) {
+			return socket.emit('productAdded', { status: 'error', message: `El codigo: ${data.code} ya existe`})
+		}
+    })
+
+})

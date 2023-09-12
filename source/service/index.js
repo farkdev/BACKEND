@@ -1,11 +1,11 @@
-
-const {productDao, cartDao } = require("../dao/factory")
+const { ProductDao, CartDao } = require("../dao/factory")
+const ProductRepository = require("../repositories/product.repository");
+const CartRepository = require("../repositories/cart.repository");
 
 
 const userDaoMongo = require("../dao/mongo/user.mongo");
-const cartMemory = require('../dao/fileSys/cartManager');
-const ProductRepository = require("../repositories/product.repository");
-const CartRepository = require("../repositories/cart.repository");
+const ChatManagerMongo = require("../dao/mongo/chat.mongo");
+
 
 // const cartService = new CartManagerMongo()
 // const cartService = new cartMemory()
@@ -14,13 +14,14 @@ const CartRepository = require("../repositories/cart.repository");
 
 
 
-const cartService = new CartRepository(new cartDao())
-const productService = new ProductRepository(new productDao())
+const cartService = new CartRepository(new CartDao())
+const productService = new ProductRepository(new ProductDao())
 const userService = new userDaoMongo()
-
+const chatService = new ChatManagerMongo()
 
 module.exports= {
     productService,
     cartService,
-    userService
-}
+    userService,
+    chatService
+} 

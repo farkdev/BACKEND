@@ -1,35 +1,35 @@
 const config = require('../config/objectConfig')
+let ProductDao
+let CartDao
 
-let productDao
-let cartDao
 
 switch (config.persistence) {
     case 'MONGO':
         config.connectDB()
-        const productDaoMongo = require('../dao/mongo/product.mongo')
-        const cartDaoMongo = require('../dao/mongo/cart.mongo')
-        cartDao = cartDaoMongo
-        productDao = productDaoMongo
+        const ProductDaoMongo = require('../dao/mongo/product.mongo')
+        const CartDaoMongo = require('../dao/mongo/cart.mongo')
+        CartDao = CartDaoMongo
+        ProductDao = ProductDaoMongo
 
-        break
+        break;
 
 
     case 'FILE':
-        const productFile = require('../dao/fileSys/ProductManager2')
-        const cartFile = require('../dao/fileSys/cartManager')
+        const ProductFile = require('../dao/fileSys/ProductManager2')
+        const CartFile = require('../dao/fileSys/cartManager')
 
-        cartDao = cartFile
-        productDao = productFile
+        CartDao = CartFile
+        ProductDao = ProductFile
 
-        break 
+        break; 
 
-//     default:
-//         break
+    default:
+        break;
 }
 
 
 
 module.exports = {
-    productDao,
-    cartDao
+    ProductDao,
+    CartDao
 }

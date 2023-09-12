@@ -1,4 +1,4 @@
-const { productService, cartService } = require("../service/index")
+const { productService, cartService, userService } = require("../service/index")
 const { verifyResetToken } = require("../utils/jwt")
 const { logger } = require("../config/logger")
 
@@ -6,6 +6,7 @@ class ViewsController{
 
     getProducts = async(req,res)=>{
         try{
+            
             const {limit= 10}= req.query
             const{page=1} = req.query
             const { sort } = req.query
@@ -28,7 +29,7 @@ class ViewsController{
                 prevLink,
                 nextLink 
             } = await productService.getProducts(limit ,page ,sortOptions)
-    
+            
             !hasPrevPage
             ? prevLink = null
             : prevLink =`/?page=${prevPage}&limit=${limit}&sort=${sort}`
@@ -37,7 +38,7 @@ class ViewsController{
             ?nextLink = null
             :nextLink =`/?page=${nextPage}&limit=${limit}&sort=${sort}`
     
-    
+            
             res.render('home',{
                 title: "Lista de Productos",
                 payload: docs,
@@ -51,7 +52,6 @@ class ViewsController{
                 prevLink,
                 nextLink
             })
-    
         }catch(error){
             logger.error(error)
         }
@@ -60,7 +60,7 @@ class ViewsController{
     getRealTimeProducts = async(req, res)=>{
         try{
             let user = req.session.user
-            const carts = await productService.getProducts()
+            const carts = await productService.getRealTimeProducts()
 
             res.render('realTimeProducts', {
                 title: "Lista de productos en tiempo real",
@@ -72,20 +72,30 @@ class ViewsController{
         }
     }
 
-    getCartById = async(req,res)=>{
+    getCartById = async (req,res)=>{
         try{
-            const cid = req.params.cid;
-            const cart = await cartService.getCartById(cid);
+            let user = req.session.user
+            const cid = req.params.cid
+            const cart = await cartService.getCartById(cid)
             if(!cart){
                 res.status(404).send({ message: `El carrito con ID ${cid} no existe` })
             }else{
                 let products= cart.products
+                let subTotalPrice = products.reduce((total, item) => total + (item.cantidad * item.product.price), 0)
+                let iva = Math.round(subTotalPrice * 0.21)
+                products.forEach((item) => {item.totalProducto = item.cantidad * item.product.price})
+                let totalPrice = subTotalPrice + iva
+
                 res.status(201).render('cart', {
-                    products
+                    products,
+                    user,
+                    subTotalPrice,
+                    iva,
+                    totalPrice
                 })
             }
-        } catch(error){
-            logger.error(error)
+        }catch(error){
+            console.log(error)
         }
     
     }
@@ -104,6 +114,24 @@ class ViewsController{
         }
 
     }
+
+    usersControlPanel = async (req, res) => {
+        try {
+            let user = req.session.user
+            const allUsers = await userService.getAllUsers()
+
+            res.render('users', {
+                title: "Lista de usuarios",
+                allUsers: allUsers,
+                user
+            })
+        } catch (error) {
+            logger.error(error)
+        }
+
+    }
+
+
 }
 
 module.exports = new ViewsController()

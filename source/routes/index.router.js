@@ -17,15 +17,5 @@ router.use('/api/session', users)
 router.use('/', viewsRouter)
 router.use('/realtimeproducts', viewsRouter)
 router.use('/prueba', prueba)
-router.get('/loggerTest', async (req, res)=>{
-    // req.logger.fatal('Fatal')
-    // req.logger.error('Error')
-    //req.logger.warning('Warning')
-    // req.logger.info('Info')
-    // req.logger.http('http')
-    //logger.debug('Debug')
-    // req.logger.fatal('Fatal Error')
-        
-    res.send({message: 'Prueba de logger'})
-})
+
 module.exports = router

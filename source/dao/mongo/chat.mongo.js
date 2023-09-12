@@ -1,40 +1,24 @@
-const { Message } = require('./models/message.model');
+const { ChatModel} = require("./models/chat.model")
 
-
-class ChatMongo {
-
-  async saveMessage (user, message) {
-    try{
-      const newMessage = new Message({ 
-        user,
-        message,
-      
-      });
-      await newMessage.save()
-      console.log("Mensaje guardado")
-      return newMessage
-      }catch (err){
-        console.log("error al guardar el mensaje en MongoDB",err)
-        throw err
-      }
+class ChatManagerMongo{
+    constructor(){
+        this.chatModel = ChatModel
+    }
+    async saveMessages(data){
+        try{
+            return await this.chatModel.create(data)
+        }catch(err){
+            throw new Error(err);
+        }
     }
 
-
-
-    // Para obtener todos los mensajes de la base de datos:
-    async allMessages() {
-      try{
-        const messages = await Message.find({}).sort({ createdAt: 1 })
-        console.log("Mensajes cargados desde MONGODB", messages)
-        return messages
-      } catch (err){
-        console.log("error al cargar todos los mensajes desde MONGODB", err)
-        throw err
-      }
+    async getMessages(){
+        try{
+            return await this.chatModel.find({})
+        }catch(err){
+            throw new Error(err);
+        }
     }
 }
 
-
-
-
-module.exports = new ChatMongo()
+module.exports = ChatManagerMongo ;

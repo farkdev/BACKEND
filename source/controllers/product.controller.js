@@ -1,34 +1,48 @@
 const { productService } = require("../service/index");
-const { productDto }  = require('../dto/product.dto')
+const { ProductDto }  = require('../dto/product.dto')
+
 const { Error } = require('../utils/CustomError/error');
 const { CustomError } = require("../utils/CustomError/customError");
 const { createProductErrorInfo } = require("../utils/CustomError/info");
-const productGenerator = require("../utils/productMockGen");
+const { productGenerator } = require("../utils/productMockGen");
 const { logger } = require("../config/logger");
-const { error } = require("winston");
+const { sendMailDeletedProduct } = require('../utils/nodemailer')
 
 
-class productController {
+class ProductController {
     
     getProducts = async (req, res) => {
         try {
             const {limit= 5}= req.query
             const{page=1} = req.query
             const { sort } = req.query;
-            let user = req.user;
+            
             const products = await productService.getProducts(limit, page, sort)
-            res.render('home', {
-                title: "Lista de Productos",
-                payload: products,
-                user
-            });
-        } catch (err) {
+            !products
+            ?res.status(500).send({status: 'error', error:'no hay productos para mostrar'})
+            :res.status(200).send({status: 'success', payload: products})
+        }catch(error){
             logger.error(error)
         }
+        
     }
 
 
-    
+    // try {
+    //     const {limit= 5}= req.query
+    //     const{page=1} = req.query
+    //     const { sort } = req.query;
+    //     let user = req.user;
+        
+    //     const products = await productService.getProducts(limit, page, sort)
+    //     res.render('home', {
+    //         title: "Lista de Productos",
+    //         payload: products,
+    //         user
+    //     });
+    // } catch (err) {
+    //     logger.error(error)
+    // }
     getProductById = async(req, res) => {
         try{
             const id = req.params.pid;
@@ -78,7 +92,7 @@ class productController {
     }
 
 
-    updProduct = async (req, res) =>{
+    updateProduct = async (req, res) =>{
         try {
             const id = req.params.pid;
             const productModify= req.body
@@ -91,15 +105,26 @@ class productController {
         }
     }
     
-    delete = async (req, res) => {
+    deleteProduct = async(req, res)=>{
         try{
-            const id = req.params.pid;
-            const deletedProduct = await productService.deleteProduct(id)
-            Object.keys(deletedProduct).length === 0
-            ? res.status(404).send({error: `El producto con ID ${id} no existe`})
-            : res.status(200).send({ status:`El producto con ID ${id} se ha eliminado`, payload: deletedProduct});
-        }catch(err){
-            logger.error(err)
+            const id = req.params.pid
+            const user = req.user
+
+            const product = await productService.getProductById(id)
+            if (!product) return res.status(404).send({status:'error', error: `El producto con ID ${id} no existe` })
+            
+            if(user && (user.role === 'admin' || (user.role === 'premium' && product.owner === user.email))){
+                if(product.owner !== 'admin'){
+                    await sendMailDeletedProduct(product)
+                }
+                const deletedProduct = await productService.deleteProduct(id)
+                if (deletedProduct) {
+                    return res.status(200).send({ status:'success', payload: product });
+                }
+            }
+            return res.status(401).send({status:'error', error: "No tienes permiso para eliminar este producto" })
+        }catch(error){
+            logger.error(error)
         }
     }
     
@@ -109,8 +134,8 @@ class productController {
             for (let i = 0; i < 50 ; i++) {
                 products.push(productGenerator())  
             }
-            res.send({status: 'success', payload: products})
-        } catch (error) {
+            res.status(200).send({status: 'success', payload: products})
+        }catch(error){
             logger.error(error)
         }
     }
@@ -118,7 +143,7 @@ class productController {
 
 
 
-module.exports = new productController();
+module.exports = new ProductController();
 
 
 // getById(req, res) {

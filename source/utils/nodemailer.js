@@ -29,7 +29,7 @@ exports.sendMail = async (body)=>{
 
 exports.sendResetPassMail = async (user,resetLink)=>{
     return await transport.sendMail({
-        from: 'RESET PASSWORD<bernii.ferreyra@gmail.com>',
+        from: 'RESET PASSWORD<frojaskonrath@gmail.com>',
         to: user.email,
         subject:'reset password',
         html:`<div>
@@ -38,6 +38,30 @@ exports.sendResetPassMail = async (user,resetLink)=>{
         <p>Para continuar con el proceso, haz clic en el siguiente enlace:</p>
         <a href="${resetLink}">${resetLink}</a>
         <p>El enlace expirará después de 1 hora.</p>
+        </div>`
+    })
+}
+
+exports.sendMailDeletedUser = async (user)=>{
+    return await transport.sendMail({
+        from: 'USUARIO ELMINADO POR INACTIVIDAD<frojaskonrath@gmail.com>',
+        to: user.email ,
+        subject:'Usuario eliminado por inactividad',
+        html:`<div>
+        <h1>Tu usuario ha sido eliminado debido al periodo de inactividad!</h1>
+        <p>Estimado ${user.first_name} su cuenta ha sido eliminada debido al periodo de inactividad</p>
+        </div>`
+    })
+}
+
+exports.sendMailDeletedProduct = async (product, user)=>{
+    return await transport.sendMail({
+        from: 'PRODUCTO ELIMINADO<frojaskonrath@gmail.com>',
+        to: 'frojaskonrath@gmail.com@gmail.com'/* product.owner */,
+        subject:'se ha eliminado un producto',
+        html:`<div>
+        <h1>Se ha eliminado un producto de tu propiedad!</h1>
+        <p>estimado ${product.owner} El producto "${product.title}" se ha elminado de la base de datos</p>
         </div>`
     })
 }

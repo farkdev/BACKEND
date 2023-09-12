@@ -1,25 +1,25 @@
 const { Router } = require('express')
-const productController = require('../controllers/product.controller');
+const ProductController = require('../controllers/product.controller');
 const { passportCall } = require('../config/passportCall')
 const { authorization } = require('../config/passportAuthorization')
 const router = Router()
 
-router.get('/mockinproducts', productController.generateProductsMock)
+router.get('/mockinproducts', ProductController.generateProductsMock)
 
 //trae productos
-router.get('/', productController.getProducts);
+router.get('/', ProductController.getProducts);
 
 //TRAE PRODUCTO POR ID
-router.get('/:pid', productController.getProductById);
+router.get('/:pid', ProductController.getProductById);
 
 //CREA PRODUCTO
-router.post('/', productController.createProduct);
+router.post('/', ProductController.createProduct);
 
 //ACTUALIZA PRODUCTO
-router.put('/:pid', passportCall('current', {session:false}), authorization('admin'), productController.updProduct);
+router.put('/:pid', passportCall('current', {session:false}), authorization('admin'), ProductController.updateProduct);
 
 //ELIMINA PRODUCTO
-router.delete('/:pid', passportCall('current', {session:false}), authorization('admin'),productController.delete);
+router.delete('/:pid', passportCall('current', {session:false}), authorization('admin'), ProductController.deleteProduct);
 
 
 // passportCall('current', {session:false}), authorization('admin')

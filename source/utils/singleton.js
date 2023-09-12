@@ -13,7 +13,7 @@ class MongoSingleton {
     }
     static getInstance(){
         if (this.#instance){
-            console.log('Conexión ya establecida')
+            console.log('Conexión establecida')
             return this.#instance
         }
         this.#instance =  new MongoSingleton()

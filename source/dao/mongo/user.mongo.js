@@ -7,9 +7,6 @@ class userDaoMongo {
         this.userModel = userModel
     }
 
-
-    get = async (limit=10, page=1)=> await this.userModel.paginate({ },{limit, page, lean: true})
-
     async getUser(email){
         try{
             return await this.userModel.findOne(email)
@@ -17,7 +14,8 @@ class userDaoMongo {
             return new Error(err)
         }
     }  
-    async create (newUser){
+    
+    async create(newUser){
         try {
             return await this.userModel.create(newUser)
     } catch (error){
@@ -25,12 +23,20 @@ class userDaoMongo {
     }
     }
     
-    async update(uid, userUpdate){
-        return await this.userModel.findOneAndUpdate({_id: uid}, userUpdate)
+    async getUserById(uid){
+        try {
+            return await this.userModel.findOne({_id: uid})
+        } catch (error) {
+            logger.error(error)
+        }
     }
 
-    async delete(uid){
-        return await this.userModel.findOneAndDelete({_id: uid})
+    async getAllUsers(){
+        try{
+            return await this.userModel.find({}).lean()
+        }catch(err){
+            logger.error(err)
+        }
     }
 
     async updateUser(uid,updateData){
@@ -40,7 +46,15 @@ class userDaoMongo {
             logger.error(error)
         }
     }
-    
+
+    async deleteUser(uid){
+        try{
+            return await this.userModel.deleteOne({_id: uid});
+        }catch(error){
+            logger.error(error)
+        }
+    }
+
 }
 
 module.exports = userDaoMongo

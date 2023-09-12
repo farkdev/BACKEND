@@ -1,10 +1,10 @@
-class CartRepo {
+class CartRepository {
     constructor(dao){
         this.dao = dao
     }
 
     getCarts(){
-        return this.dao.getCarts
+        return this.dao.getCarts()
     }
 
     getCartById(cid){
@@ -23,8 +23,8 @@ class CartRepo {
         return this.dao.modifyProdFromCart(cid, pid, quantity)
     }
 
-    removeProductFromCart(cid,pid){
-        return this.dao.removeProductFromCart(cid,pid)
+    removeProductFromCart(cid, pid){
+        return this.dao.removeProductFromCart(cid, pid)
     }
 
     removeAllProductsFromCart(cid){
@@ -42,4 +42,4 @@ class CartRepo {
 
 }
 
-module.exports = CartRepo
+module.exports = CartRepository

@@ -1,9 +1,11 @@
-class ProductRepo {
+class ProductRepository {
     constructor(dao){
         this.dao = dao
     }
 
-
+    getRealTimeProducts(){
+        return this.dao.getRealTimeProducts()
+    }
 
     getProducts(limit, page, sortOptions){
         return this.dao.getProducts(limit, page, sortOptions)
@@ -17,15 +19,15 @@ class ProductRepo {
         return this.dao.createProduct(newProduct)
     }
 
-    updateProduct(pid){
-        return this.dao.updateProduct(pid)
+    updateProduct(pid, obj){
+        return this.dao.updateProduct(pid, obj)
     }
 
-    deleteProduct(pid, obj){
-        return this.dao.deleteProduct(pid, obj)
+    deleteProduct(pid){
+        return this.dao.deleteProduct(pid)
     }
 }
 
 
 
-module.exports = ProductRepo
+module.exports = ProductRepository

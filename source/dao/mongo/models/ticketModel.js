@@ -28,6 +28,6 @@ const ticketSchema = new Schema ({
 ticketSchema.index({code: 1}, {unique: true})
 
 
-const ticketModel = model(collection, ticketSchema)
+const TicketModel = model(collection, ticketSchema)
 
-module.exports= { ticketModel }
+module.exports= { TicketModel }

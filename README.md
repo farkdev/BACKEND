@@ -4,12 +4,9 @@ Claro, puedo ayudarte a crear un README más orientado para principiantes. Aquí
 
 # Aplicacion Desarrollo Backend para Comercio Electrónico
 
-
 ## Acceso a la Aplicación
 
 Puedes acceder al aplicativo en línea en el siguiente enlace: [Enlace a la Aplicación]().
-
-Además, prepare documentación para comprender los modelos de "carrito" y "productos". Puedes consultarla [aquí]).
 
 ## Tecnologías Utilizadas
 

@@ -3,7 +3,7 @@ const fs = require('fs')
 class CartManager {
     constructor(){
         this.cart = []
-        this.path = './source/dao/cart.json'
+        this.path = './src/dao/cart.json'
         
     }
 

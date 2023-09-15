@@ -4,7 +4,7 @@ const fs = require('fs');
 class ProductManager {
     constructor() {
       this.products = [];
-      this.path = './source/data.json';
+      this.path = './src/data.json';
       try {
         fs.readFile(this.path, 'utf-8', (err, data) => {
           if (err) {

@@ -1,6 +1,6 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
-const products = require('./data.json')
+const products = require('../src/data.json')
 const handlebars = require('express-handlebars')
 const { Server } = require('socket.io')
 const MongoStore = require('connect-mongo')
@@ -9,13 +9,13 @@ const {uploader} = require('./utils/multer')
 const {socketProducts} = require ('./public/js/socketProducts')
 const app = express()
 const objectConfig  = require('./config/objectConfig')
-const routerServer = require('../source/routes/index.router')
+const routerServer = require('../src/routes/index.router')
 const { chatService, productService } = require('./service/index')
 const cookie = require('./routes/prueba.router')
 
 const { initPassportMid, initPassportGithub } = require('./config/passport.config')
 const passport = require('passport')
-const  {initPassport}  = require('../source/config/passportJWT')
+const  {initPassport}  = require('../src/config/passportJWT')
 const { errorHandler } = require('./middlewares/err.middleware')
 
 const PORT =  process.env.PORT; 

@@ -43,7 +43,7 @@ router.post('/documents', uploader.array('uploads'), async(req, res)=>{
 })
 
 router.get('/github', passport.authenticate('github', {scope:['user:email']}))
-router.get('/githubcallback',passport.authenticate('github',{failureRedirect:'/login'}), async(req,res)=>{
+router.get('/githubcallback',passport.authenticate('github',{failureRedirect:'/api/session/login'}), async(req,res)=>{
     req.session.user=req.user
     res.redirect('/')
 })

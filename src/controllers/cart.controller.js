@@ -31,7 +31,9 @@ class cartController {
     getCartById = async (req, res)=>{
         try{
             const cid = req.params.cid;
+            console.log("valor de cid", cid)
             const cart = await cartService.getCartById(cid);
+            console.log("prueba")
             !cart
             ?res.status(404).send({status:'error', error: `El carrito con ID ${cid} no existe` })
             :res.status(200).send({status: 'success', payload: cart})

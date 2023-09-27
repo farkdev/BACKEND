@@ -21,8 +21,8 @@ class CartManagerMongo {
     async getCartById(cid){
         try{
             return await this.cartModel.findOne({_id: cid}).lean();
-        } catch (err){
-            logger.error (err)
+        } catch (error){
+            logger.error(error)
         }
     }
 
@@ -30,8 +30,8 @@ class CartManagerMongo {
     async createCart(newCart){
         try{
             return await this.cartModel.create(newCart)
-        } catch (err){
-            logger.error (err)
+        } catch (error){
+            logger.error(error)
         }
     }
 
@@ -97,8 +97,8 @@ class CartManagerMongo {
           await cart.save();
     
           return cart;
-        } catch (err) {
-            logger.error(err);
+        } catch (error) {
+            logger.error(error);
         }
     }
 
@@ -110,16 +110,16 @@ class CartManagerMongo {
                 {$set: {products:[]}},
                 {new:true}
             )
-        } catch (err){
-            logger.error(err)
+        } catch (error){
+            logger.error(error)
         }
     }
 
     async generateTicket(newTicket){
         try{
             return await TicketModel.create(newTicket)
-        } catch (err) {
-            logger.error(err)
+        } catch (error) {
+            logger.error(error)
         }
     }
     

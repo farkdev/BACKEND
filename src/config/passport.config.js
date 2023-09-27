@@ -1,6 +1,7 @@
 const passport      = require('passport')
-const local         = require('passport-local')
-const { userModel } = require('../dao/mongo/models/user.model')
+
+const { userService } = require('../service/index')
+
 const { createHash, isValidPassword } = require('../utils/bcryptHash')
 const GithubStrategy = require('passport-github2')
 require('dotenv').config()
@@ -15,18 +16,17 @@ const initPassportGithub = ()=>{
     }, async(accessToken, refreshToken, profile, done)=>{
         console.log('profile', profile)
         try {
-            let email = profile._json.email
-           let user= await userModel.findOne({email: profile._json.email})
+           
+           let user= await userService.getUser({email: profile._json.email})
            if(!user){
             let newUser= {
                 first_name: profile.username,
                 last_name: profile.username,
                 email: profile._json.email,
                 date_of_birth: profile._json.created_at,
-                username: profile._json.name,
                 password: ' '
             }
-            let result= await userModel.create(newUser)
+            let result= await userService.create(newUser)
             return done(null, result)
            }
            return done(null, user)
@@ -40,7 +40,7 @@ const initPassportGithub = ()=>{
     })
 
     passport.deserializeUser(async(id, done)=>{
-        let user= await userModel.findOne({_id:id})
+        let user= await userService.getUserById({_id:id})
         done(null, user)
     })
 }

@@ -1,6 +1,8 @@
 const { productService, cartService, userService } = require("../service/index")
 const { verifyResetToken } = require("../utils/jwt")
 const { logger } = require("../config/logger")
+const { CartModel } = require("../dao/mongo/models/cart.model")
+
 
 class ViewsController{
 
@@ -76,14 +78,24 @@ class ViewsController{
         try{
             let user = req.session.user
             const cid = req.params.cid
-            const cart = await cartService.getCartById(cid)
+            // const cart = await cartService.getCartById(cid)
+            const cart = await CartModel.findById(cid)
+            console.log("Resultado de la consulta a la base de datos:", cart);
+            console.log("valor de cid", cid)
             if(!cart){
                 res.status(404).send({ message: `El carrito con ID ${cid} no existe` })
             }else{
                 let products= cart.products
                 let subTotalPrice = products.reduce((total, item) => total + (item.cantidad * item.product.price), 0)
                 let iva = Math.round(subTotalPrice * 0.21)
-                products.forEach((item) => {item.totalProducto = item.cantidad * item.product.price})
+                products.forEach((item) => {
+                    if (item.product && item.product.price) {
+                      item.totalProducto = item.cantidad * item.product.price;
+                    } else {
+                      console.error("El objeto product o su propiedad price es undefined.");
+                    }
+                  });
+                  
                 let totalPrice = subTotalPrice + iva
 
                 res.status(201).render('cart', {

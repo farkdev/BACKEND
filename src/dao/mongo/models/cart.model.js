@@ -5,17 +5,16 @@ const  collection = 'carts'
 
 
 const cartSchema = new Schema({
-    status: String,
     products: [{
         product: {
             type: Schema.Types.ObjectId,
             ref: 'products',
-            required: true
         },
         quantity: {
             type: Number,
             required: true
-        }
+        },
+        _id: false
     }]
 })
 

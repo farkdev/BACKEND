@@ -12,7 +12,7 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
-    thumbnail: String,
+    thumbnail: [String],
     price: {
         type: Number,
         required: true

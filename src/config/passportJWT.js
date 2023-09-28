@@ -16,7 +16,7 @@ const cookieExtractor = req =>{
 
 const configStrategy = {
     jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-    secretOrKey: process.env.JWT_SECRET_KEY
+    secretOrKey: configServer.jwt_secret_key
 }
 
 const initPassport= ()=>{

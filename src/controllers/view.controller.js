@@ -78,8 +78,8 @@ class ViewsController{
         try{
             let user = req.session.user
             const cid = req.params.cid
-            // const cart = await cartService.getCartById(cid)
-            const cart = await CartModel.findById(cid)
+            const cart = await cartService.getCartById(cid)
+           
             console.log("Resultado de la consulta a la base de datos:", cart);
             console.log("valor de cid", cid)
             if(!cart){

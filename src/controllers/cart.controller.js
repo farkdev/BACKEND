@@ -43,22 +43,25 @@ class cartController {
     }
 
     //AGREGA PRODUCTO AL CARRITO
-    addToCart = async(req, res) =>{
-        try{
-            const cid = req.params.cid
-            const pid = req.params.pid
-            const { quantity }= req.body
-            
-            const addProduct= await cartService.addToCart(cid, pid, quantity)
-            if( !addProduct ){
-                res.status(400).send({message:'No se agrego el producto'})
-            }
-    
-            res.status(201).send({message:'success', payload: addProduct})
-        }catch(err){
-            logger.error(err)
+    addToCart = async (req, res) => {
+        try {
+          const cid = req.params.cid;
+          const pid = req.params.pid;
+          const { quantity } = req.body;
+      
+          const addProduct = await cartService.addToCart(cid, pid, quantity);
+      
+          if (!addProduct) {
+            return res.status(400).send({ status: 'error', error: 'No se pudo agregar el producto' });
+          }
+      
+          res.status(200).send({ status: 'success', message: 'Producto agregado', payload: addProduct });
+        } catch (error) {
+          logger.error(error);
+          res.status(500).send({ status: 'error', error: 'Ocurrió un error al procesar la solicitud' });
         }
-    }
+      }
+      
     //MODIFICA PRODUCTO DENTRO DEL CARRITO
     modifyProdFromCart = async(req, res) =>{
         try{

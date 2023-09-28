@@ -22,14 +22,14 @@
           </div>
           <div class="col-5 mb-2">
             <p class="h6">{{this.product.title}}</p>
-            <p class="pl-1 mb-0">category: {{this.product.category}}</p>
             <p class="pl-1 mb-0">$ {{this.product.price}}</p>
             <p class="pl-1 mb-0">stock: {{this.product.stock}}</p>
           </div>
           <div class="col-4 d-flex flex-column align-items-end">
             <p class="h5 ">${{this.totalProducto}}</p>
-            <p class="p-1 h5">Unidades: {{this.cantidad}}</p>
-            <button onclick="deleteFromCart('{{../user.cart}}', '{{this.product._id}}')" class="btn btn-danger">eliminar</button>
+            <p class="p-1 h5">Unidades: {{this.quantity}}</p>
+            <button id="deleteButton" data-cart="{{user.cart}}" data-product="{{this.product._id}}" class="btn btn-danger">Eliminar</button>
+
           </div>
           <hr />
         </div>
